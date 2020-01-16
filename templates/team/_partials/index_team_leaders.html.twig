@@ -1,0 +1,201 @@
+<div class="row"><!-- Row leaders -->
+    <div class="col-md-12">
+        <div class="card text-white bg-custom-dark mb-3" style="width: 100%;">
+            <div class="card-header pt-4 pb-4">League leaders</div>
+            <div class="card-body pb-0 pt-2">
+
+
+
+                <div id="carouselExampleInterval" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+
+
+
+                        {% if leaders.points %}
+
+                            <div class="carousel-item active" data-interval="5000">
+                                <div class="row justify-content-center mt-2">
+                                    {% if leaders.points.player.getIsRealPlayer == true %}
+                                        {% if leaders.points.player.image %}
+                                            <img src="{{ vich_uploader_asset(leaders.points.player, 'imageFile')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Points leader">
+                                        {% else %}
+                                            <img src="{{ asset('images/fakePlayers/fakePlayer.jpg')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Points leader">
+                                        {% endif %}
+                                    {% else %}
+                                        <img src="{{ asset('images/fakePlayers/fakePlayer.jpg')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Points leader">
+                                    {% endif %}
+                                </div>
+                                <div class="row justify-content-center mt-1">
+                                    <p class="card-small-text text-white-50">PPG Leader</p>
+                                </div>
+                                <div class="row justify-content-center mt-2">
+                                    <p><a class="noHoverYellow text-white text-decoration-none" href="{{ path('player_index', {'id': leaders.points.id}) }}">{{ leaders.points.player.firstName }} {{ leaders.points.player.lastName }}</a></p>
+                                </div>
+                                <div class="row justify-content-center yellowColor">
+                                    <p>
+                                        {% if leaders.points.gamesPlayed == 0 %}
+                                            0
+                                        {% else %}
+                                            {{ (leaders.points.points / leaders.points.gamesPlayed)|stats }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+
+
+
+                        {% if leaders.rebounds %}
+
+                            <div class="carousel-item" data-interval="5000">
+                                <div class="row justify-content-center mt-2">
+                                    {% if leaders.rebounds.player.getIsRealPlayer == true %}
+                                        {% if leaders.rebounds.player.image %}
+                                            <img src="{{ vich_uploader_asset(leaders.rebounds.player, 'imageFile')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Rebounds leader">
+                                        {% else %}
+                                            <img src="{{ asset('images/fakePlayers/fakePlayer.jpg')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Rebounds leader">
+                                        {% endif %}
+                                    {% else %}
+                                        <img src="{{ asset('images/fakePlayers/fakePlayer.jpg')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Rebounds leader">
+                                    {% endif %}
+                                </div>
+                                <div class="row justify-content-center mt-1">
+                                    <p class="card-small-text text-white-50">RBP Leader</p>
+                                </div>
+                                <div class="row justify-content-center mt-2">
+                                    <p><a class="noHoverYellow text-white text-decoration-none" href="{{ path('player_index', {'id': leaders.rebounds.id}) }}">{{ leaders.rebounds.player.firstName }} {{ leaders.rebounds.player.lastName }}</a></p>
+                                </div>
+                                <div class="row justify-content-center yellowColor">
+                                    <p>
+                                        {% if leaders.rebounds.gamesPlayed == 0 %}
+                                            0
+                                        {% else %}
+                                            {{ (leaders.rebounds.rebounds / leaders.rebounds.gamesPlayed)|stats }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                        {% if leaders.assists %}
+
+                            <div class="carousel-item" data-interval="5000">
+                                <div class="row justify-content-center mt-2">
+                                    {% if leaders.assists.player.getIsRealPlayer == true %}
+                                        {% if leaders.assists.player.image %}
+                                            <img src="{{ vich_uploader_asset(leaders.assists.player, 'imageFile')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Assists leader">
+                                        {% else %}
+                                            <img src="{{ asset('images/fakePlayers/fakePlayer.jpg')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Assists leader">
+                                        {% endif %}
+                                    {% else %}
+                                        <img src="{{ asset('images/fakePlayers/fakePlayer.jpg')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Assists leader">
+                                    {% endif %}
+                                </div>
+                                <div class="row justify-content-center mt-1">
+                                    <p class="card-small-text text-white-50">APG Leader</p>
+                                </div>
+                                <div class="row justify-content-center mt-2">
+                                    <p><a class="noHoverYellow text-white text-decoration-none" href="{{ path('player_index', {'id': leaders.assists.id}) }}">{{ leaders.assists.player.firstName }} {{ leaders.assists.player.lastName }}</a></p>
+                                </div>
+                                <div class="row justify-content-center yellowColor">
+                                    <p>
+                                        {% if leaders.assists.gamesPlayed == 0 %}
+                                            0
+                                        {% else %}
+                                            {{ (leaders.assists.assists / leaders.assists.gamesPlayed)|stats }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                        {% if leaders.steals %}
+
+                            <div class="carousel-item" data-interval="5000">
+                                <div class="row justify-content-center mt-2">
+                                    {% if leaders.steals.player.getIsRealPlayer == true %}
+                                        {% if leaders.steals.player.image %}
+                                            <img src="{{ vich_uploader_asset(leaders.steals.player, 'imageFile')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Steals leader">
+                                        {% else %}
+                                            <img src="{{ asset('images/fakePlayers/fakePlayer.jpg')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Steals leader">
+                                        {% endif %}
+                                    {% else %}
+                                        <img src="{{ asset('images/fakePlayers/fakePlayer.jpg')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Steals leader">
+                                    {% endif %}
+                                </div>
+                                <div class="row justify-content-center mt-1">
+                                    <p class="card-small-text text-white-50">SPG Leader</p>
+                                </div>
+                                <div class="row justify-content-center mt-2">
+                                    <p><a class="noHoverYellow text-white text-decoration-none" href="{{ path('player_index', {'id': leaders.steals.id}) }}">{{ leaders.steals.player.firstName }} {{ leaders.steals.player.lastName }}</a></p>
+                                </div>
+                                <div class="row justify-content-center yellowColor">
+                                    <p>
+                                        {% if leaders.steals.gamesPlayed == 0 %}
+                                            0
+                                        {% else %}
+                                            {{ (leaders.steals.steals / leaders.steals.gamesPlayed)|stats }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if leaders.blocks %}
+
+                            <div class="carousel-item" data-interval="5000">
+                                <div class="row justify-content-center mt-2">
+                                    {% if leaders.blocks.player.getIsRealPlayer == true %}
+                                        {% if leaders.blocks.player.image %}
+                                            <img src="{{ vich_uploader_asset(leaders.blocks.player, 'imageFile')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Blocks leader">
+                                        {% else %}
+                                            <img src="{{ asset('images/fakePlayers/fakePlayer.jpg')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Blocks leader">
+                                        {% endif %}
+                                    {% else %}
+                                        <img src="{{ asset('images/fakePlayers/fakePlayer.jpg')|imagine_filter('free_agents') }}" class="img-thumbnail" alt="Blocks leader">
+                                    {% endif %}
+                                </div>
+                                <div class="row justify-content-center mt-1">
+                                    <p class="card-small-text text-white-50">BPG Leader</p>
+                                </div>
+                                <div class="row justify-content-center mt-2">
+                                    <p><a class="noHoverYellow text-white text-decoration-none" href="{{ path('player_index', {'id': leaders.blocks.id}) }}">{{ leaders.blocks.player.firstName }} {{ leaders.blocks.player.lastName }}</a></p>
+                                </div>
+                                <div class="row justify-content-center yellowColor">
+                                    <p>
+                                        {% if leaders.blocks.gamesPlayed == 0 %}
+                                            0
+                                        {% else %}
+                                            {{ (leaders.blocks.blocks / leaders.blocks.gamesPlayed)|stats }}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+
+
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleInterval" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleInterval" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div><!-- Row leaders -->

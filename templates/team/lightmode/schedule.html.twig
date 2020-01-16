@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Schedule{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+
+        <div class="row">
+
+
+
+
+
+        <div class="col-md-12"><!-- Form -->
+            <div class="card text-dark bg-custom-dark mb-3" style="width: 100%;">
+                <div class="card-header pt-4 pb-4">
+                    Schedule
+                    <select name="seasonIds" id="seasonIds" class="float-right card-small-text rounded-pill">
+                        {% for season in seasonIds %}
+                            {% if season.id == selectedSeason %}
+                                <option selected="selected" value="{{ season.id }}">{{ season.id }}</option>
+                            {% else %}
+                                <option value="{{ season.id }}">{{ season.id }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <span class="float-right text-black-50 mr-2 card-small-text">Season: </span>
+                </div>
+                <div class="card-body">
+                    {% if schedule|length > 0 %}
+                        {% for game in schedule %}
+                            <div class="card bg-custom-dark-secondary mb-2">
+
+
+
+                                <div class="card-body">
+                                    <div class="row">
+
+
+
+
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <img src="{{ vich_uploader_asset(game.teamOne, 'imageFile')|imagine_filter('my_player_image') }}" style="display: block; margin-left: auto; margin-right: auto;" height="50" width="50" alt="">
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <p class="text-black-50 card-small-text text-center">
+                                                        {% if game.status == 'FINISHED' %}
+                                                            {% if game.gameDayScores.teamTwoScore < game.gameDayScores.teamOneScore %}
+                                                                <span class="yellowColor font-weight-bold">
+                                                                        {{ game.gameDayScores.teamOneScore }}
+                                                                    </span>
+                                                            {% else %}
+                                                                <span class="font-weight-bold">
+                                                                        {{ game.gameDayScores.teamOneScore }}
+                                                                </span>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {{ game.teamOne.getCurrentTeamStatus.win }} / {{ game.teamOne.getCurrentTeamStatus.lose }}
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="col text-center text-black-50">
+                                            <div class="row">
+                                                <div class="col text-center text-black-50">
+                                                    vs
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col text-center text-black-50">
+                                                    {{ game.time|date('Y-m-d') }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <img src="{{ vich_uploader_asset(game.teamTwo, 'imageFile')|imagine_filter('my_player_image') }}" style="display: block; margin-left: auto; margin-right: auto;" height="50" width="50" alt="">
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <p class="text-black-50 card-small-text text-center">
+                                                        {% if game.status == 'FINISHED' %}
+
+                                                                {% if game.gameDayScores.teamTwoScore > game.gameDayScores.teamOneScore %}
+                                                                    <span class="yellowColor font-weight-bold">
+                                                                        {{ game.gameDayScores.teamTwoScore }}
+                                                                    </span>
+                                                                {% else %}
+                                                                    <span class="font-weight-bold">
+                                                                        {{ game.gameDayScores.teamTwoScore }}
+                                                                    </span>
+                                                                {% endif %}
+
+
+
+                                                        {% else %}
+
+                                                                {{ game.teamTwo.getCurrentTeamStatus.win }} / {{ game.teamTwo.getCurrentTeamStatus.lose }}
+
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </div>
+
+
+
+                                    <p class="card-text text-black-50 text-center">
+                                        {% if game.status == 'FINISHED' %}
+                                            <a href="{{ path('team_box_score', {'id': game.id}) }}" class="btn btn-sm btn-warning active">Box score</a>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="card bg-custom-dark-secondary">
+                            <div class="card-body">
+                                <p class="card-text text-center text-black-50">
+                                    There is no games.
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="navigation mt-4">
+                    {{ knp_pagination_render(schedule) }}
+                </div>
+            </div>
+        </div><!-- Form -->
+
+        </div>
+
+
+
+
+    </div><!-- Container -->
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+    {{ encore_entry_script_tags('scheduleAction') }}
+
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Teams{% endblock %}
+
+{% block body %}
+
+    {% include 'team/_partials/_teamInfoModal.html.twig' %}
+
+    <div class="container mt-5"><!-- Container -->
+
+        <div class="row mb-5">
+
+        {% if mvp %}
+            <div class="col d-flex flex-column justify-content-center">
+                <div class="d-flex justify-content-center text-white-50 text-center">
+                    <img src="{{ asset('images/logo/logo.png') }}" height="25" class="mr-2" width="25" alt="Last season MVP"> Last season's MVP
+                </div>
+                <div class="d-flex justify-content-center">
+                    {% if mvp.isRealPlayer %}
+                        <img src="{{ vich_uploader_asset(mvp, 'imageFile')|imagine_filter('free_agents') }}" height="120" width="120" class="img-thumbnail mt-2 mb-2" alt="Last seasons MVP">
+                    {% else %}
+                        <img src="{{ asset('images/fakePlayers/fakePlayer.jpg')|imagine_filter('free_agents') }}" height="120" width="120" class="img-thumbnail mt-2 mb-2" alt="Last seasons MVP">
+                    {% endif %}
+                </div>
+
+                <div class="text-center yellowColor font-weight-bold">
+                    <a class="yellowColor text-decoration-none noHoverYellow" href="{{ path('player_index', {'id': mvp.id}) }}">{{ mvp.firstName }} {{ mvp.lastName }}</a>
+                </div>
+            </div>
+
+        {% endif %}
+
+        {% if champions %}
+
+            <div class="col d-flex flex-column justify-content-center">
+                <div class="d-flex justify-content-center text-white-50 text-center">
+                    <img src="{{ asset('images/logo/logo.png') }}" height="25" class="mr-2" width="25" alt="Last season champions"> Last season's champions
+                </div>
+                <div class="d-flex justify-content-center">
+                    <img src="{{ vich_uploader_asset(champions, 'imageFile')|imagine_filter('free_agents') }}" height="120" width="120" alt="Last season champions">
+                </div>
+
+                <div class="text-center yellowColor font-weight-bold">
+                    <a class="yellowColor text-decoration-none noHoverYellow" href="{{ path('team_view', {'id': champions.id}) }}">{{ champions.city }} {{ champions.name }}</a>
+                </div>
+            </div>
+
+
+        {% endif %}
+
+        {% if dpoy %}
+            <div class="col d-flex flex-column justify-content-center">
+                <div class="d-flex justify-content-center text-white-50 text-center">
+                    <img src="{{ asset('images/logo/logo.png') }}" height="25" class="mr-2" width="25" alt="Last season DPOY"> Last season's DPOY
+                </div>
+                <div class="d-flex justify-content-center">
+                    {% if dpoy.isRealPlayer %}
+                        <img src="{{ vich_uploader_asset(dpoy, 'imageFile')|imagine_filter('free_agents') }}" height="120" width="120" class="img-thumbnail mt-2 mb-2" alt="Last seasons DPOY">
+                    {% else %}
+                        <img src="{{ asset('images/fakePlayers/fakePlayer.jpg')|imagine_filter('free_agents') }}" height="120" width="120" class="img-thumbnail mt-2 mb-2" alt="Last seasons DPOY">
+                    {% endif %}
+                </div>
+
+                <div class="text-center yellowColor font-weight-bold">
+                    <a class="yellowColor text-decoration-none noHoverYellow" href="{{ path('player_index', {'id': dpoy.id}) }}">{{ dpoy.firstName }} {{ dpoy.lastName }}</a>
+                </div>
+            </div>
+
+        {% endif %}
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+
+
+                {% include 'team/_partials/index_team_upcoming_games.html.twig' %}
+
+
+            </div><!-- COL_MD_12 -->
+        </div><!-- Row -->
+
+
+
+        <div class="row"><!-- Row -->
+
+            <div class="col-md-8"><!-- Teams / first column -->
+
+
+                {% include 'team/_partials/index_team_teams.html.twig' %}
+
+
+                {% include 'team/_partials/index_team_training_camp.html.twig' %}
+
+
+            </div><!-- Teams / first column -->
+
+
+
+            <div class="col-md-4"><!-- Standings / column two -->
+
+
+
+                {% include 'team/_partials/index_team_standings.html.twig' %}
+
+                {% include 'team/_partials/index_team_rookie.html.twig' %}
+
+
+
+                {% if leaders.points %}
+
+
+                    {% include 'team/_partials/index_team_leaders.html.twig' %}
+
+
+                {% endif %}
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card bg-custom-dark">
+                            <div class="card-header pt-4 pb-4">
+                                Season rewards
+                            </div>
+                            <div class="card-body d-flex flex-column justify-content-center">
+                                {% if season.userReward %}
+                                    <img src="{{ vich_uploader_asset(season.userReward, 'imageMvpFile')|imagine_filter('my_player_image') }}" class="img-thumbnail d-block ml-auto mr-auto" style="height: 180px; width: 200px;" alt="...">
+                                    <span class="text-white-50 text-center mt-2">Reward for MVP: {{ season.userReward.mvpAwardName }}</span>
+                                    <img src="{{ vich_uploader_asset(season.userReward, 'imageDpoyFile')|imagine_filter('my_player_image') }}" class="img-thumbnail d-block ml-auto mr-auto mt-3" style="height: 180px; width: 200px;" alt="...">
+                                    <span class="text-white-50 text-center mt-2">Reward for DPOY: {{ season.userReward.dpoyAwardName }}</span>
+                                {% else %}
+                                    <p class="card-text text-center">Rewards will be announced soon.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div><!-- Standings / column two -->
+
+
+
+        </div><!-- Row -->
+    </div><!-- Container -->
+
+{% endblock %}

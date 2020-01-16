@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New training camp{% endblock %}
+
+{% block body %}
+
+
+    <div class="container mt-5"><!-- Container -->
+
+        <div class="row">
+            <div class="col-md-4 mb-5">
+                {% include 'admin/_partials/_admin_navbar.html.twig' %}
+            </div>
+
+            <div class="col-md-8 mb-5">
+                <div class="card bg-custom-dark">
+                    <div class="card-header">Create new training camp <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-body">
+                        <div class="col-md-10 offset-md-1 text-dark">
+                            {% if errors.count > 0 %}
+
+                                <div class="alert alert-danger">
+
+                                    {{ form_errors(form) }}
+
+                                </div>
+
+                            {% endif %}
+
+                            {{ form_start(form) }}
+
+                            {{ form_widget(form) }}
+
+                            <button type="submit" class="btn btn-md btn-warning">Create</button>
+                            {{ form_end(form) }}
+                            <small class="form-text text-muted mt-2">* Required fields.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Container -->
+
+
+{% endblock %}
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+
+    {{ parent() }}
+    {{ encore_entry_script_tags('new_player') }}
+
+{% endblock %}

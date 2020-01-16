@@ -1,0 +1,92 @@
+<nav class="navbar navbar-expand-lg {{ app.session.get('lightMode') and (app.session.get('lightMode') == true) ? 'navbar-light bg-light' : 'navbar-dark bg-dark' }} pt-3 pb-3 mb-0 {{ (app.session.flashbag.peek('success')|length > 0
+        or app.session.flashbag.peek('warning')|length > 0) ? '' : '' }}" id="navbar" style="border-bottom: solid 2px rgba(0,0,0,.1); {{ app.session.get('lightMode') and (app.session.get('lightMode') == true) ? '' : 'background-color: #1E2024 !important;' }}"><!-- nav navbar -->
+
+
+
+    <div class="container"><!-- container -->
+
+
+
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar1">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+
+        <a class="navbar-brand" href="{{ url('home') }}">
+            <img src="{{ asset('images/logo/logo.png') }}" alt="" width="50" height="50">
+        </a>
+
+
+
+        <div class="collapse navbar-collapse" id="navbar1"><!-- Collapse navbar -->
+
+
+
+            <ul class="navbar-nav"><!-- Left side -->
+                {% if is_granted('ROLE_USER') %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('team') }}">Home</a></li>
+                    {% if app.user.player %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('player_free_agents') }}">Free Agents</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('team_training_camp') }}">Training camps</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link active" href="{{ path('new_player') }}">Create my Player</a></li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('admin_dashboard') }}">Admin board</a></li>
+                    {% endif %}
+                {% endif %}
+            </ul><!-- Left side -->
+
+
+
+            <ul class="navbar-nav ml-auto"><!-- Right side -->
+                {% if is_granted('ROLE_USER') %}
+
+                    {% if app.session.get('lightMode') == true %}
+                        <li class="nav-item"><a class="nav-link mt-1" href="{{ path('change_template_mode') }}"><button class="btn btn-sm btn-dark"><i class="fas fa-moon"></i> Dark mode</button></a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link mt-1" href="{{ path('change_template_mode') }}"><button class="btn btn-sm btn-light"><i class="fas fa-sun"></i> Light mode</button></a></li>
+                    {% endif %}
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% if app.user.player %}
+                                {% if app.user.player.image %}
+                                    <img src="{{ vich_uploader_asset(app.user.player, 'imageFile')|imagine_filter('free_agents') }}" alt="" width="40" height="40" style="border-radius: 49%;">
+                                {% else %}
+                                    <img src="{{ asset('images/profile3.png') }}" alt="" width="40" height="40">
+                                {% endif %}
+                            {% else %}
+                                <img src="{{ asset('images/profile3.png') }}" alt="" width="40" height="40">
+                            {% endif %}
+
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{%  if app.user.player %} {{ url('player_index', {'id': app.user.player.id}) }} {% else %} {{ path('new_player') }} {% endif %}">{% if app.user.player %}Check my Player{% else %} Create my Player {% endif %}</a>
+
+                            <a class="dropdown-item" href="{{ url('app_logout') }}">Logout</a>
+                        </div>
+                    </li>
+
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('app_login') }}">Login <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('app_register') }}">Register</a>
+                    </li>
+                {% endif %}
+            </ul><!-- Right side -->
+
+
+
+        </div><!-- Collapse navbar -->
+
+
+
+    </div><!-- container -->
+
+
+
+</nav><!-- nav navbar -->

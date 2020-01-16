@@ -1,0 +1,64 @@
+<div class="card text-white bg-custom-dark mb-3" style="width: 100%;"><!-- PlayerInformation -->
+    <div class="card-header pt-4 pb-4"><small class="font-weight-bold">{% if app.user.player == player %}My{% else %}{% endif %}</small>Information</div>
+    <div class="card-body">
+        <div class="card-standings-header">
+
+            <div class="row">
+                <div class="col text-center pt-1 pb-1 text-white card-small-text">Player status</div>
+                <div class="col text-center pt-1 pb-0 text-white-50 card-small-text">
+                    {% if player.isTrainingFinished() == false %}
+                        <span class="badge badge-danger">Training</span>
+                    {% else %}
+                        <span class="badge badge-success">Resting</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row" style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                <div class="col text-center pt-1 pb-1 text-white card-small-text">Born</div>
+                <div class="col text-center pt-1 pb-1 text-white-50 card-small-text">{{ player.born|date('Y-m-d') }}</div>
+            </div>
+            <div class="row" style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                <div class="col text-center pt-1 pb-1 text-white card-small-text">Position</div>
+                <div class="col text-center pt-1 pb-1 text-white-50 card-small-text">{{ player.position.name }}</div>
+            </div>
+            <div class="row" style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                <div class="col text-center pt-1 pb-1 text-white card-small-text">Country</div>
+                <div class="col text-center pt-1 pb-1 text-white-50 card-small-text">{{ player.country.name }}</div>
+            </div>
+            <div class="row" style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                <div class="col text-center pt-1 pb-1 text-white card-small-text">Strongest skills</div>
+                <div class="col text-center pt-1 pb-1 text-white-50 card-small-text">{{ player.firstType.name }}, {{ player.secondType.name }}</div>
+            </div>
+            <div class="row" style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                <div class="col text-center pt-1 pb-1 text-white card-small-text">Team</div>
+                <div class="col text-center pt-1 pb-1 text-white-50 card-small-text">{% if player.team %} {{ player.team.city }} {{ player.team.name }} {% else %} None {% endif %}</div>
+            </div>
+            {% if player.team %}
+                {% if player.isRealPlayer %}
+
+                <div class="row" style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                    <div class="col text-center pt-1 pb-1 text-white card-small-text">Contract ends after</div>
+                    <div class="col text-center pt-1 pb-1 text-white-50 card-small-text">{{ player.seasonEndsContract - season }} season (-s)</div>
+                </div>
+                {% endif %}
+                <div class="row" style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                    <div class="col text-center pt-1 pb-1 text-white card-small-text">Jersey number</div>
+                    <div class="col text-center pt-1 pb-1 text-white-50 card-small-text">#{{ player.jerseyNumber }}</div>
+                </div>
+            {% endif %}
+            <div class="row" style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                <div class="col text-center pt-1 pb-1 text-white card-small-text">Height, Weight</div>
+                <div class="col text-center pt-1 pb-0 text-white-50 card-small-text">{{ player.height }} cm, {{ player.weight }} kg</div>
+            </div>
+            {% set break = false %}
+            {% for award in player.playerAwards if not break %}
+                {% if award.award == 'AWARD_ROTY' %}
+                    <div class="row" style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                        <div class="col text-center pt-2 pb-1 text-white card-small-text">Rookie of the year in {{ award.season.id }} season.</div>
+                    </div>
+                {% set break = true %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div><!-- PlayerInformation -->

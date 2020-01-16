@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Training camps{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+        <div class="row">
+
+
+            <div class="col-md-12"><!-- Form -->
+                <div class="card text-white bg-custom-dark mb-3" style="width: 100%;">
+                    <div class="card-header pt-4 pb-4">Training camps</div>
+                </div>
+            </div><!-- Form -->
+
+
+
+        </div>
+
+        <div class="row">
+
+
+            {% for camp in camps %}
+                <div class="col-md-3">
+                    <div class="card bg-custom-dark mb-3">
+                        <img src="{{ vich_uploader_asset(camp, 'imageFile') }}" class="card-img-top" style="height: 200px;"  alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ camp.name }}</h5>
+                            <p class="card-text text-center text-white-50">{% if app.user.player.team %} ${{ camp.price }} {% else %} {% set price = (camp.price * 25) / 100 %} ${{ camp.price + price }} {% endif %}</p>
+                            <p class="text-white-50 text-center">Skill points<br>{{ camp.skillPoints }}</p>
+                            {% if camp.badge %}
+                            <p class="text-white-50 text-center">
+                                <span class="badge badge-warning">
+                                    {{ camp.badge.name }}
+                                </span>
+
+                            </p>
+                            {% endif %}
+                            <span class="d-flex justify-content-center">
+                                {% if app.user.player.isTrainingFinished() == false %}
+                                    <a href="#" class="btn btn-outline-warning disabled">You are currently in training camp</a>
+                                {% else %}
+                                    <a href="{{ path('join_training_camp', {'id': camp.id}) }}" class="btn btn-outline-warning">Join this training camp</a>
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            {% endfor %}
+
+
+
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="navigation mt-4">
+                {{ knp_pagination_render(camps) }}
+            </div>
+        </div>
+
+
+    </div><!-- Container -->
+
+{% endblock %}
+

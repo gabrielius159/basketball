@@ -1,0 +1,11 @@
+<div class="card text-dark bg-custom-dark mb-3" style="width: 100%;"><!-- PlayerSkills -->
+    <div class="card-header pt-4 pb-4">{% if app.user.player == player %}<small class="font-weight-bold">My</small>Skills<a href="{{ path('team_training_camp') }}" class="float-right btn btn-sm btn-outline-warning" style="font-size: x-small !important;">Training camps</a>{% else %}<small class="font-weight-bold">Skills</small>{% endif %}</div>
+    <div class="card-body">
+        <div class="card-standings-header text-dark" id="playerAttributes" data-player="{{ player.id }}">
+
+            <!-- playerSkills.js -->
+
+        </div>
+    </div>
+</div><!-- PlayerSkills -->
+

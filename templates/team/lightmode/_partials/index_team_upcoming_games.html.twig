@@ -1,0 +1,141 @@
+<div class="card text-dark bg-custom-dark mb-3" style="width: 100%;">
+    <div class="card-header pt-4 pb-4">Upcoming games <a href="{{ path('team_schedule') }}" class="float-right btn btn-sm btn-outline-warning" style="font-size: x-small !important;">Show all</a></div>
+    <div class="card-body">
+        <div class="row">
+
+            <div class="col mb-2">
+
+                {% if todayGame %}
+                    <div class="card bg-dark mb-2 h-100">
+                        <div class="card-body">
+
+
+
+                            <h5 class="card-title text-center card-small-text">Today</h5>
+                            <div class="row text-center">
+                                <div class="col-md-5">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <img src="{{ vich_uploader_asset(todayGame.teamOne, 'imageFile')|imagine_filter('my_player_image') }}" height="50" width="50" alt="...">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 text-center text-black-50">
+                                            {% if todayGame.status == 'WAITING' %}
+                                                {{ todayGame.teamOne.getCurrentTeamStatus.win }} / {{ todayGame.teamOne.getCurrentTeamStatus.lose }}
+                                            {% else %}
+
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2"><span class="text-black-50 card-small-text">vs</span></div>
+                                <div class="col-md-5">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <img src="{{ vich_uploader_asset(todayGame.teamTwo, 'imageFile')|imagine_filter('my_player_image') }}" height="50" width="50" alt="...">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 text-center text-black-50">
+                                            {% if todayGame.status == 'WAITING' %}
+
+                                                {{ todayGame.teamTwo.getCurrentTeamStatus.win }} / {{ todayGame.teamTwo.getCurrentTeamStatus.lose }}
+                                            {% else %}
+
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                {% else %}
+
+                    {% if twoGames %}
+                        <div class="card bg-custom-dark-secondary mb-2 h-100" style="">
+                            <div class="card-body">
+                                <h5 class="card-title text-center text-black-50">No games today</h5>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="card bg-custom-dark-secondary mb-2 h-100" style="">
+                            <div class="card-body">
+                                <p class="card-title text-center text-black-50">Schedule will be announced when season starts.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+
+
+
+
+
+                {% endif %}
+
+
+
+
+            </div>
+            {% if twoGames %}
+                {% for game in twoGames %}
+                    <div class="col mb-2 ">
+
+
+
+                        <div class="card bg-custom-dark-secondary h-100" style="">
+                            <div class="card-body">
+
+
+
+                                <h5 class="card-title text-center card-small-text">{{ game.time|date('Y-m-d') }}</h5>
+                                <div class="row text-center">
+                                    <div class="col-md-5">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <img src="{{ vich_uploader_asset(game.teamOne, 'imageFile')|imagine_filter('my_player_image') }}" height="50" width="50" alt="...">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-center text-black-50">
+                                                {{ game.teamOne.getCurrentTeamStatus.win }} / {{ game.teamOne.getCurrentTeamStatus.lose }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2"><span class="text-black-50 card-small-text">vs</span></div>
+                                    <div class="col-md-5">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <img src="{{ vich_uploader_asset(game.teamTwo, 'imageFile')|imagine_filter('my_player_image') }}" height="50" width="50" alt="...">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-center text-black-50">
+                                                {{ game.teamTwo.getCurrentTeamStatus.win }} / {{ game.teamTwo.getCurrentTeamStatus.lose }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                {% endfor %}
+            {% else %}
+
+            {% endif %}
+
+
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<div class="card text-dark bg-custom-dark mb-3" style="width: 100%;"><!-- PlayerStats -->
+    <div class="card-header pt-4 pb-4"><small class="font-weight-bold">{% if app.user.player == player %}My{% else %}{% endif %}</small>Stats</div>
+    <div class="card-body">
+        <div class="card-standings-header">
+            {% set index = 0 %}
+            {% for key, stat in player.getCurrentPlayerStats.getPlayerStatsArray %}
+                <div class="row" style="{{ index == 0 ? '' : 'border-top: 1px solid rgba(0, 0, 0, 0.125);' }}">
+                    <div class="col text-center pt-1 pb-1 text-dark card-small-text">{{ key }}</div>
+                    <div class="col text-center pt-1 pb-1 text-black-50 card-small-text">{{ stat|stats }}</div>
+                </div>
+                {% set index = index + 1 %}
+            {% endfor %}
+        </div>
+    </div>
+</div><!-- PlayerStats -->

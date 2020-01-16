@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Buyout from team{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+
+
+        <div class="col-md-6 offset-md-3"><!-- Form -->
+            <div class="card text-dark bg-custom-dark mb-3" style="width: 100%;">
+                <div class="card-header pt-4 pb-4">Contract</div>
+                <div class="card-body">
+                    <p>
+                        {% if gamesPlayed >= teamCount %}
+                            You cannot sign with any team, wait till the season ends.
+                        {% else %}
+                            Sign contract with this team? {{ salary|salary }}
+                        {% endif %}
+                    </p>
+                    {% if gamesPlayed < teamCount %}
+                        {{ form_start(form) }}
+
+                        {{ form_widget(form) }}
+
+                        {{ form_end(form) }}
+                    {% endif %}
+                </div>
+            </div>
+        </div><!-- Form -->
+
+
+
+    </div><!-- Container -->
+
+{% endblock %}

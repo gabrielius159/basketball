@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of all teams{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+        <div class="row">
+            <div class="col-md-4 mb-5">
+                {% include 'admin/_partials/_admin_navbar.html.twig' %}
+            </div>
+
+            <div class="col-md-8 mb-5">
+
+
+                <div class="card bg-custom-dark">
+                    <div class="card-header">Team list ({{ teams.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-body">
+                        <div class="row mb-4 d-flex justify-content-center">
+                            <a href="{{ path('new_team') }}" class="btn btn-sm btn-secondary ml-2">Create new team</a>
+                        </div>
+                        <div class="row">
+                            <table class="table table-borderless text-center text-white">
+                                <thead class="text-white-50">
+                                <tr>
+                                    <td>Team</td>
+                                    <td>Salary cap</td>
+                                    <td>Action</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for team in teams %}
+                                    <tr>
+                                        <td><a href="{{ path('team_view', {'id': team.id}) }}" class="text-decoration-none text-white font-weight-bold">{{ team.city }} {{ team.name }}</a></td>
+                                        <td>${{ team.budget }}</td>
+                                        <td><a href="{{ url('delete_team', {'id': team.id}) }}" class="btn btn-sm btn-danger">Remove</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="navigation col-md-4 offset-md-4 mt-4 d-flex justify-content-center">
+                    {{ knp_pagination_render(teams) }}
+                </div>
+            </div>
+
+
+        </div>
+    </div><!-- Container -->
+
+
+{% endblock %}

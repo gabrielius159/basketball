@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ player.firstName }} {{ player.lastName }}{% endblock %}
+
+{% block body %}
+
+<div class="container mb-5 mt-5"><!-- Container -->
+
+
+
+    <div class="row"><!-- Row -->
+
+
+
+        <div class="col-md-4"><!-- Player info / profile / first column -->
+
+            {% if app.session.get('lightMode') and (app.session.get('lightMode') == true) %}
+
+                {% include 'player/lightmode/_partials/player_player.html.twig' %}
+
+                {% include 'player/lightmode/_partials/player_information.html.twig' %}
+
+                {% include 'player/lightmode/_partials/player_skills.html.twig' %}
+
+                {% include 'player/lightmode/_partials/player_stats.html.twig' %}
+
+            {% else %}
+
+                {% include 'player/_partials/player_player.html.twig' %}
+
+                {% include 'player/_partials/player_information.html.twig' %}
+
+                {% include 'player/_partials/player_skills.html.twig' %}
+
+                {% include 'player/_partials/player_stats.html.twig' %}
+
+            {% endif %}
+
+
+
+
+
+
+
+
+
+        </div><!-- Player info / profile / first column -->
+
+
+        <div class="col-md-8"><!-- Team info / second column -->
+
+            {% if app.session.get('lightMode') and (app.session.get('lightMode') == true) %}
+
+                {% include 'player/lightmode/_partials/player_team.html.twig' %}
+
+                {% include 'player/lightmode/_partials/player_details.html.twig' %}
+
+                {% include 'player/lightmode/_partials/player_badges.html.twig' %}
+
+                {% include 'player/lightmode/_partials/player_past_season_statistics.html.twig' %}
+
+            {% else %}
+
+                {% include 'player/_partials/player_team.html.twig' %}
+
+                {% include 'player/_partials/player_details.html.twig' %}
+
+                {% include 'player/_partials/player_badges.html.twig' %}
+
+                {% include 'player/_partials/player_past_season_statistics.html.twig' %}
+
+            {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+        </div><!-- Team info / second column -->
+
+
+
+    </div><!-- Row -->
+
+
+
+</div><!-- Container -->
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+    {{ encore_entry_script_tags('playerSkills') }}
+
+{% endblock %}

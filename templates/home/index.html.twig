@@ -1,0 +1,104 @@
+{% extends 'homepage_base.html.twig' %}
+
+{% block title %}Basketball Player's Career Simulator{% endblock %}
+{% block body %}
+
+   <header class="showcase">
+       <div class="showcase-top">
+           <img src="{{ asset('images/logo/logo.png') }}" alt="Logo">
+           <a href="{{ path('app_login') }}" class="btn btn-rounded">Login</a>
+       </div>
+
+       <div class="showcase-content">
+           <h1>Start your <span class="yellowMarker">journey</span></h1>
+           <p>Compete, win and get rewarded.</p>
+           <a href="{{ path('app_register') }}" class="btn btn-xl">
+               Register <i class="fas fa-chevron-right btn-icon"></i>
+           </a>
+       </div>
+   </header>
+
+    <section class="tabs">
+        <div class="container">
+            <div id="tab-1" class="tab-item tab-border">
+                <i class="fas fa-door-open fa-3x"></i>
+                <p class="hide-sm">Compete for the first place</p>
+            </div>
+            <div id="tab-2" class="tab-item">
+                <i class="fas fa-tablet-alt fa-3x"></i>
+                <p class="hide-sm">Play anywhere</p>
+            </div>
+            <div id="tab-3" class="tab-item ">
+                <i class="fas fa-tags fa-3x"></i>
+                <p class="hide-sm">Real rewards</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="tab-content">
+        <div class="container">
+            <!-- Tab content 1 -->
+            <div id="tab-1-content" class="tab-content-item show">
+                <div class="tab-1-content-inner">
+                    <div class="inner-div-grid">
+                        <p class="text-lg" style="margin-bottom: 2rem;">
+                            Compete with other teams for the championship.
+                        </p>
+                        <a href="{{ path('app_register') }}" class="btn btn-lg">Register now</a>
+                    </div>
+                    <img src="{{ asset('images/main_page/standings.jpg') }}" class="border-top border-bottom" alt="">
+                </div>
+            </div>
+
+
+            <!-- Tab content 2 -->
+            <div id="tab-2-content" class="tab-content-item">
+                <div class="tab-2-content-top">
+                    <p class="text-lg">
+                        Change teams, improve each year to get bigger contract!
+                    </p>
+                    <a href="{{ path('app_register') }}" class="btn btn-lg">Register now</a>
+                </div>
+                <div class="tab-2-content-bottom">
+                    <div>
+                        <i class="far fa-calendar-alt fa-5x"></i>
+                        <p class="text-md">A game in a day</p>
+                        <p class="text-dark">
+                            Everyday there's one game to be played. This gives time to improve your player for the next game.
+                        </p>
+                    </div>
+                    <div>
+                        <i class="fas fa-id-badge fa-5x"></i>
+                        <p class="text-md">Training, badges and more!</p>
+                        <p class="text-dark">
+                            Train your player, send to training camp and achieve new badges to be better than anyone.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3 -->
+            <div id="tab-3-content" class="tab-content-item">
+                <div class="text-center">
+                    <p class="text-lg">Yep, this is true, real rewards</p>
+                    <a href="{{ path('app_register') }}" class="btn btn-lg">Register now</a>
+                </div>
+
+                <img src="{{ asset('images/main_page/rewardsUpdated.jpg') }}" class="border-top border-bottom" alt="">
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; Created by Gabrielius Salichovas, PI16B</p>
+    </footer>
+
+
+{% endblock %}
+{% block javascripts %}
+
+    {{ parent() }}
+    {{ encore_entry_script_tags('homepage') }}
+
+{% endblock %}
+

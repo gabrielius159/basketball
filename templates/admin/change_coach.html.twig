@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Change coach{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+        <div class="row">
+            <div class="col-md-4 mb-5">
+                {% include 'admin/_partials/_admin_navbar.html.twig' %}
+            </div>
+
+            <div class="col-md-8 mb-5">
+
+
+                <div class="card bg-custom-dark">
+                    <div class="card-header">Change coach <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-body">
+                        <div class="row mb-4 d-flex justify-content-center">
+                            <a href="{{ path('new_coach') }}" class="btn btn-sm btn-secondary ml-2">Create new Coach</a>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 offset-md-2 pb-3">
+
+                                {{ form_start(form) }}
+
+                                {{ form_widget(form) }}
+                                <button type="submit" class="btn btn-md btn-warning">Change</button>
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div><!-- Container -->
+
+
+{% endblock %}

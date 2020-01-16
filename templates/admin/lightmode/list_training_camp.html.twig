@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of all training camps{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+        <div class="row">
+            <div class="col-md-4 mb-5">
+                {% include 'admin/_partials/_admin_navbar.html.twig' %}
+            </div>
+
+            <div class="col-md-8 mb-5">
+
+
+                <div class="card bg-custom-dark">
+                    <div class="card-header">Training camp list ({{ camps.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-body">
+                        <div class="row mb-4 d-flex justify-content-center">
+                            <a href="{{ path('new_training_camp') }}" class="btn btn-sm btn-secondary ml-2">Create new training camp</a>
+                        </div>
+                        <div class="row">
+                            <table class="table table-borderless text-center text-dark table-responsive">
+                                <thead class="text-black-50">
+                                <tr>
+                                    <td>Training camp</td>
+                                    <td>Improves</td>
+                                    <td>Duration</td>
+                                    <td>Price</td>
+                                    <td>Gives badge?</td>
+                                    <td>Actions</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for camp in camps %}
+                                    <tr>
+                                        <td>{{ camp.name }}</td>
+                                        <td>{{ camp.attributeToImprove.name }} + {{ camp.skillPoints }}</td>
+                                        <td>{{ camp.duration }}h</td>
+                                        <td>${{ camp.price }}</td>
+                                        <td>{% if camp.badge %} <span class="badge badge-warning">{{ camp.badge.name }}</span> {% else %}No{% endif %}</td>
+                                        <td><a href="{{ url('delete_training_camp', {'id': camp.id}) }}" class="btn btn-sm btn-danger">Remove</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="navigation col-md-4 offset-md-4 mt-4 d-flex justify-content-center">
+                    {{ knp_pagination_render(camps) }}
+                </div>
+            </div>
+
+
+        </div>
+    </div><!-- Container -->
+
+
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Box score{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+
+
+        <div class="row">
+
+
+
+            <div class="col-md-6"><!-- Form -->
+                <div class="card text-dark bg-custom-dark mb-3" style="width: 100%;">
+                    <div class="card-header pt-4 pb-4">{{ gameDay.teamOne.city }} {{ gameDay.teamOne.name }} {{ gameDay.gameDayScores.teamOneScore }}</div>
+                    <div class="card-body text-dark">
+
+
+                        <table class="table table-sm table-borderless table-responsive">
+                            <thead>
+                            <tr class="text-dark text-center">
+                                <th scope="col">Player</th>
+                                <th scope="col">Points</th>
+                                <th scope="col">Assists</th>
+                                <th scope="col">Rebounds</th>
+                                <th scope="col">Steals</th>
+                                <th scope="col">Blocks</th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-black-50 text-center">
+
+                            {% set teamOnePoints = 0 %}
+                            {% set teamOneAssists = 0 %}
+                            {% set teamOneRebounds = 0 %}
+                            {% set teamOneSteals = 0 %}
+                            {% set teamOneBlocks = 0 %}
+
+                            {% for player in gameDay.gameDayScores.teamOnePlayerStats %}
+
+                                <tr>
+                                    <th scope="row">{{ player.player }}</th>
+                                    <td>{{ player.points }}</td>
+                                    <td>{{ player.assists }}</td>
+                                    <td>{{ player.rebounds }}</td>
+                                    <td>{{ player.steals }}</td>
+                                    <td>{{ player.blocks }}</td>
+                                </tr>
+
+                                {% set teamOnePoints = teamOnePoints + player.points %}
+                                {% set teamOneAssists = teamOneAssists + player.assists %}
+                                {% set teamOneRebounds = teamOneRebounds + player.rebounds %}
+                                {% set teamOneSteals = teamOneSteals + player.steals %}
+                                {% set teamOneBlocks = teamOneBlocks + player.blocks %}
+
+                            {% endfor %}
+
+                            <tr style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                                <th scope="row" class="font-weight-bold">Totals</th>
+                                <td>{{ teamOnePoints }}</td>
+                                <td>{{ teamOneAssists }}</td>
+                                <td>{{ teamOneRebounds }}</td>
+                                <td>{{ teamOneSteals }}</td>
+                                <td>{{ teamOneBlocks }}</td>
+
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div><!-- Form -->
+
+            <div class="col-md-6"><!-- Form -->
+                <div class="card text-dark bg-custom-dark mb-3" style="width: 100%;">
+                    <div class="card-header pt-4 pb-4">{{ gameDay.teamTwo.city }} {{ gameDay.teamTwo.name }} {{ gameDay.gameDayScores.teamTwoScore }}</div>
+                    <div class="card-body text-dark">
+
+
+                        <table class="table table-sm table-borderless table-responsive">
+                            <thead>
+                            <tr class="text-dark text-center">
+                                <th scope="col">Player</th>
+                                <th scope="col">Points</th>
+                                <th scope="col">Assists</th>
+                                <th scope="col">Rebounds</th>
+                                <th scope="col">Steals</th>
+                                <th scope="col">Blocks</th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-black-50 text-center">
+
+
+                            {% set teamTwoPoints = 0 %}
+                            {% set teamTwoAssists = 0 %}
+                            {% set teamTwoRebounds = 0 %}
+                            {% set teamTwoSteals = 0 %}
+                            {% set teamTwoBlocks = 0 %}
+
+
+                            {% for player in gameDay.gameDayScores.teamTwoPlayerStats %}
+
+                                <tr>
+                                    <th scope="row">{{ player.player }}</th>
+                                    <td>{{ player.points }}</td>
+                                    <td>{{ player.assists }}</td>
+                                    <td>{{ player.rebounds }}</td>
+                                    <td>{{ player.steals }}</td>
+                                    <td>{{ player.blocks }}</td>
+                                </tr>
+
+                                {% set teamTwoPoints = teamTwoPoints + player.points %}
+                                {% set teamTwoAssists = teamTwoAssists + player.assists %}
+                                {% set teamTwoRebounds = teamTwoRebounds + player.rebounds %}
+                                {% set teamTwoSteals = teamTwoSteals + player.steals %}
+                                {% set teamTwoBlocks = teamTwoBlocks + player.blocks %}
+
+                            {% endfor %}
+
+                            <tr style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                                <th scope="row" class="font-weight-bold">Totals</th>
+                                <td>{{ teamTwoPoints }}</td>
+                                <td>{{ teamTwoAssists }}</td>
+                                <td>{{ teamTwoRebounds }}</td>
+                                <td>{{ teamTwoSteals }}</td>
+                                <td>{{ teamTwoBlocks }}</td>
+
+                            </tr>
+
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div><!-- Form -->
+
+
+        </div>
+
+
+
+    </div><!-- Container -->
+
+{% endblock %}

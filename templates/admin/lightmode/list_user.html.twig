@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of all players{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+        <div class="row">
+            <div class="col-md-4 mb-5">
+                {% include 'admin/_partials/_admin_navbar.html.twig' %}
+            </div>
+
+            <div class="col-md-8 mb-5">
+
+
+                <div class="card bg-custom-dark">
+                    <div class="card-header">User list ({{ users.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-body">
+                        <div class="row mb-4 d-flex justify-content-center">
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                <form>
+                                    <div class="form-group d-flex flex-row">
+                                        <input type="text" name="search" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+
+                                        <button class="btn btn-md btn-warning" type="submit">Search</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <table class="table table-borderless text-center text-dark">
+                                <thead class="text-black-50">
+                                <tr>
+                                    <td>ID</td>
+                                    <td>Link to player</td>
+                                    <td>Email</td>
+                                    <td>Impersonate</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.id }}</td>
+                                        <td>{% if user.player %} <a href="{{ path('player_index', {'id': user.player.id}) }}" class="btn btn-sm btn-warning">Player</a> {% else %}No player{% endif %}</td>
+                                        <td>{{ user.email }}</td>
+                                        {% if app.user == user %}
+                                            <td>-</td>
+                                        {% else %}
+                                            <td><a href="{{ path('home', {'_switch_user': user.email}) }}" class="btn btn-sm btn-outline-secondary">Impersonate</a></td>
+                                        {% endif %}
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="navigation col-md-4 offset-md-4 mt-4 d-flex justify-content-center">
+                    {{ knp_pagination_render(users) }}
+                </div>
+            </div>
+
+
+        </div>
+    </div><!-- Container -->
+
+
+{% endblock %}

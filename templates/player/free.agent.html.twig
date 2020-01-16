@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Free agents{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+        <div class="row">
+
+
+            <div class="col-md-12"><!-- Form -->
+                <div class="card text-white bg-custom-dark mb-3" style="width: 100%;">
+                    <div class="card-header pt-4 pb-4">Free agents</div>
+                </div>
+            </div><!-- Form -->
+
+
+
+        </div>
+
+        <div class="row">
+
+
+            {% for player in players %}
+                <div class="col-md-4">
+                    <div class="card bg-custom-dark mb-3">
+                        <img src="{{ vich_uploader_asset(player, 'imageFile') }}" class="card-img-top" style="height: 300px;" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ player.firstName }} {{ player.lastName }}</h5>
+                            <p class="card-text text-white-50">{{ player.position.name }}, {{ player.height }} cm, {{ player.weight }} kg.</p>
+                            <a href="{{ url('player_index', {'id': player.id}) }}" class="btn btn-outline-warning ">Go to profile</a>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            {% endfor %}
+
+
+
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="navigation mt-4">
+                {{ knp_pagination_render(players) }}
+            </div>
+        </div>
+
+
+    </div><!-- Container -->
+
+{% endblock %}

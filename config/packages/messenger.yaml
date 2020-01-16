@@ -1,0 +1,17 @@
+framework:
+    messenger:
+        transports:
+            # Uncomment the following line to enable a transport named "amqp"
+            # amqp: '%env(MESSENGER_TRANSPORT_DSN)%'
+            async:
+              dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+
+        routing:
+            # Route your messages to the transports
+            'App\Message\SimulateGames': async
+            #'App\Message\SetChampions': async
+            # 'App\Message\SetChampionAwardToPlayer': async
+            #'App\Message\SetSeasonRewards': async
+            'App\Message\SimulateTwoGames': async
+            'App\Message\SimulateOneGame': async
+            'App\Message\CheckContracts': async

@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of all attributes{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+        <div class="row">
+            <div class="col-md-4 mb-5">
+                {% include 'admin/_partials/_admin_navbar.html.twig' %}
+            </div>
+
+            <div class="col-md-8 mb-5">
+                <div class="card bg-custom-dark">
+                    <div class="card-header">Attribute list ({{ attributes.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-body">
+                        <div class="row mb-4 d-flex justify-content-center">
+                            <a href="{{ path('new_attribute') }}" class="btn btn-sm btn-secondary ml-2">Create new attribute </a>
+                        </div>
+                        <div class="row">
+                            <table class="table table-borderless text-center text-dark">
+                                <thead class="text-black-50">
+                                <tr>
+                                    <td>Attribute name</td>
+                                    <td>Action</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for attribute in attributes %}
+                                    <tr>
+                                        <td>{{ attribute.name }}</td>
+                                        <td><a href="{{ url('delete_attribute', {'id': attribute.id}) }}" class="btn btn-sm btn-danger">Remove</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="navigation col-md-4 offset-md-4 mt-4 d-flex justify-content-center">
+                    {{ knp_pagination_render(attributes) }}
+                </div>
+            </div>
+
+        </div>
+    </div><!-- Container -->
+
+
+{% endblock %}

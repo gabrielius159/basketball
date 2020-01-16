@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ team.city }} {{ team.name }}{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+        {% if team.teamAwards|length > 0 %}
+            <div class="row">
+                <div class="col"><h5 class="text-center">Team accolades</h5></div>
+            </div>
+            <div class="row">
+                <div class="col d-flex justify-content-center mb-4">
+                    <img src="{{ asset('images/logo/logo.png') }}" height="25" width="25" class="" alt="">x{{ team.teamAwards|length }}
+                </div>
+            </div>
+        {% endif %}
+
+
+        <div class="row"><!-- Row -->
+
+
+
+            <div class="col-md-8"><!-- Column one -->
+
+
+
+                {% include 'team/lightmode/_partials/view_team_roster.html.twig' %}
+
+
+
+            </div><!-- Column one -->
+
+
+
+            <div class="col-md-4"><!-- Team logo / column two -->
+
+
+                {% include 'team/lightmode/_partials/view_team_logo.html.twig' %}
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card text-dark bg-custom-dark mb-3" style="width: 100%;"><!-- PlayerInformation -->
+                            <div class="card-header pt-4 pb-4">Team information</div>
+                            <div class="card-body">
+                                <div class="card-standings-header">
+                                    <div class="row">
+                                        <div class="col text-center pt-1 pb-1 text-dark card-small-text">Available roster spots</div>
+                                        <div class="col text-center pt-1 pb-1 text-black-50 card-small-text">{{ searchingFor }}</div>
+                                    </div>
+                                    {% if team.coach %}
+                                        <div class="row" style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                                            <div class="col text-center pt-1 pb-1 text-dark card-small-text">Coach</div>
+                                            <div class="col text-center pt-1 pb-1 text-black-50 card-small-text">{{ team.coach.firstName }} {{ team.coach.lastName }}</div>
+                                        </div>
+                                        <div class="row" style="border-top: 1px solid rgba(0, 0, 0, 0.125);">
+                                            <div class="col text-center pt-1 pb-1 text-dark card-small-text">Coach specialization</div>
+                                            <div class="col text-center pt-1 pb-1 text-black-50 card-small-text">{{ team.coach.firstGameType.name }}</div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div><!-- PlayerInformation -->
+                    </div>
+                </div>
+
+                {% if app.user.player %}
+
+                    {% if app.user.player.team == team or app.user.player.team == null %}
+
+                        {% include 'team/lightmode/_partials/view_team_info.html.twig' %}
+
+                    {% endif %}
+
+                {% endif %}
+            </div><!-- Team logo / column two -->
+
+
+
+        </div><!-- Row -->
+    </div><!-- Container -->
+
+{% endblock %}

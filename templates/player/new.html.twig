@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create your player{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+
+
+
+        <div class="col-md-8 offset-md-2"><!-- Form -->
+            <div class="card text-white bg-custom-dark mb-3" style="width: 100%;">
+                <div class="card-header pt-4 pb-4">Create your player</div>
+                <div class="card-body">
+                {{ form_start(form) }}
+
+                    {{ form_errors(form) }}
+
+                    {{ form_widget(form, {'attr': {'class': 'text-white-50'}}) }}
+
+                    <button type="submit" class="btn btn-md btn-warning">Create Player</button>
+
+                    {{ form_end(form) }}
+                    <small class="form-text text-muted mt-2">* Required fields.</small>
+                </div>
+            </div>
+        </div><!-- Form -->
+
+
+    </div><!-- Container -->
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+
+    {{ parent() }}
+    {{ encore_entry_script_tags('new_player') }}
+
+{% endblock %}

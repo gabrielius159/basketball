@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of all players{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+        <div class="row">
+            <div class="col-md-4 mb-5">
+                {% include 'admin/_partials/_admin_navbar.html.twig' %}
+            </div>
+
+            <div class="col-md-8 mb-5">
+
+
+                <div class="card bg-custom-dark">
+                    <div class="card-header">Player list ({{ players.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-body">
+                        <div class="row mb-4 d-flex justify-content-center">
+                            <a href="{{ path('delete_players') }}" class="btn btn-sm btn-secondary ml-2">Delete all players</a>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                <form>
+                                    <div class="form-group d-flex flex-row">
+                                        <input type="text" name="search" class="form-control" id="exampleFormControlInput1" placeholder="Dwight Howard">
+
+                                        <button class="btn btn-md btn-warning" type="submit">Search</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <table class="table table-borderless text-center text-dark">
+                                <thead class="text-black-50">
+                                <tr>
+                                    <td>Id</td>
+                                    <td></td>
+                                    <td>Player</td>
+                                    <td>Has team?</td>
+                                    <td>Real player?</td>
+                                    <td>Action</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for player in players %}
+                                    <tr>
+                                        <td>{{ player.id }}</td>
+                                        <td>{% if player.image %} <img width="120px" height="120px" src="{{ vich_uploader_asset(player, 'imageFile') }}">{% else %} <img width="120px" height="120px" src="{{ asset('images/fakePlayers/fakePlayer.jpg') }}">{% endif %}</td>
+                                        <td><a href="{{ path('player_index', {'id': player.id}) }}" class="text-decoration-none text-dark font-weight-bold">{{ player.firstname }} {{ player.lastname }}</a></td>
+                                        <td>{% if player.team %} Yes {% else %}No{% endif %}</td>
+                                        <td>{% if player.isRealPlayer %}Yes{% else %}No{% endif %}</td>
+                                        <td><a href="{{ url('delete_player', {'id': player.id}) }}" class="btn btn-sm btn-danger">Remove</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="navigation col-md-4 offset-md-4 mt-4 d-flex justify-content-center">
+                    {{ knp_pagination_render(players) }}
+                </div>
+            </div>
+
+
+        </div>
+    </div><!-- Container -->
+
+
+{% endblock %}

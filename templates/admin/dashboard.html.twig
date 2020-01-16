@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin board{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+        <div class="row">
+            <div class="col-md-4 mb-5">
+                {% include 'admin/_partials/_admin_navbar.html.twig' %}
+            </div>
+
+            <div class="col-md-8 mb-5">
+                <div class="card bg-custom-dark">
+                    <div class="card-header">Admin board</div>
+                    <div class="card-body">
+                        <p>Welcome to admin board. This is the place where you can manage the project.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- Container -->
+
+{% endblock %}

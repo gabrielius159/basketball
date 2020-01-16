@@ -1,0 +1,58 @@
+<div class="row"><!-- Row -->
+
+
+
+    <div class="col-md-12"><!-- Column md-12 -->
+
+
+
+        <div class="card text-white bg-custom-dark mb-3" style="width: 100%;"><!-- Player Team -->
+            <div class="card-header pt-4 pb-4"><small class="font-weight-bold">{% if app.user.player == player %}My{% else %}{% endif %}</small>Team</div>
+            <div class="card-body">
+                {% if player.team %}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="{{ vich_uploader_asset(player.team, 'imageFile')|imagine_filter('my_player_image') }}" class="card-img" alt=""><br>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row pt-0">
+                                <div class="col-md-4 h-100 d-flex justify-content-center flex-column text-center" style="border-left: 1px solid rgba(0, 0, 0, 0.125);">
+                                    <h5>Contract</h5>
+                                    <p class="text-center text-white-50">
+                                        ${{ player.contractSalary }} / a game, {{ player.contractYears }} yr.
+                                    </p>
+                                </div>
+                                <div class="col-md-4 h-100 d-flex justify-content-center flex-column text-center" style="border-left: 1px solid rgba(0, 0, 0, 0.125);">
+                                    <h5>Current team status</h5>
+                                    <p class="text-white-50">
+                                        {{ player.team.getCurrentTeamStatus.win }} / {{ player.team.getCurrentTeamStatus.lose }}
+                                    </p>
+                                </div>
+                                <div class="col-md-4 h-100" style="border-left: 1px solid rgba(0, 0, 0, 0.125);">
+                                    {% if app.user.player == player %}
+                                        <a href="{{ path('team_buyout') }}" class="btn btn-md btn-outline-secondary">Ask for buyout</a>
+                                    {% else %}
+
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if app.user.player == player %}
+                        <p>You don't have team. Find one one <a href="{{ path('team') }}" class="font-weight-bold yellowColor">Teams</a> page.</p>
+                    {% else %}
+                        <p>This player is a free agent.</p>
+                    {% endif %}
+
+                {% endif %}
+            </div>
+        </div><!-- Player Team -->
+
+
+
+    </div><!-- Column md-12 -->
+
+
+
+</div><!-- Row -->

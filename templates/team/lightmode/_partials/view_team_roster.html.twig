@@ -1,0 +1,35 @@
+<div class="row"><!-- Roster -->
+    <div class="col-md-12">
+        <div class="card text-dark bg-custom-dark mb-3" style="width: 100%;">
+            <div class="card-header pt-4 pb-4">Roster</div>
+            <div class="card-body">
+                <table class="table table-borderless text-dark table-responsive">
+                    <thead>
+                    <tr style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+                        <th scope="col" class="text-left">#</th>
+                        <th scope="col" class="text-left">Overall</th>
+                        <th scope="col" class="text-left">Player</th>
+                        <th scope="col" class="text-left">Position</th>
+                        <th scope="col" class="text-left">H, W</th>
+                        <th scope="col" class="text-left">Country</th>
+                        <th scope="col" class="text-left">Contract</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for player in team.getPlayersOrderByRating() %}
+                        <tr>
+                            <th scope="row" class="text-left card-small-text">{{ player.jerseyNumber }}</th>
+                            <td class="text-center card-small-text text-black-50">{{ player.getPlayerRating()|score }}</td>
+                            <td class="text-left card-small-text text-black-50"><a class="text-decoration-none text-dark" href="{{ path('player_index', {'id': player.id}) }}">{{ player.firstName }} {{ player.lastName }}</a></td>
+                            <td class="text-left card-small-text text-black-50">{{ player.position.name }}</td>
+                            <td class="text-left card-small-text text-black-50">{{ player.height }} cm, {{ player.weight }} kg</td>
+                            <td class="text-left card-small-text text-black-50">{{ player.country.name }}</td>
+                            <td class="text-left card-small-text text-black-50">{{ player.contractYears }} yr. {{ player.contractSalary|salary }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div><!-- Roster -->

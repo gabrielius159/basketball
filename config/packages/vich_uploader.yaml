@@ -1,0 +1,35 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        players:
+            uri_prefix: /images/players
+            upload_destination: '%kernel.project_dir%/public/images/players'
+            delete_on_remove:   true
+            namer:
+                service: vich_uploader.namer_uniqid
+        teams:
+            uri_prefix: /images/teams
+            upload_destination: '%kernel.project_dir%/public/images/teams'
+            delete_on_remove:   true
+            namer:
+                service: vich_uploader.namer_uniqid
+        training_camps:
+            uri_prefix: /images/training_camps
+            upload_destination: '%kernel.project_dir%/public/images/training_camps'
+            delete_on_remove:   true
+            namer:
+                service: vich_uploader.namer_uniqid
+        user_rewards_mvp:
+            uri_prefix: /images/user_rewards_mvp
+            upload_destination: '%kernel.project_dir%/public/images/user_rewards_mvp'
+            delete_on_remove:   true
+            namer:
+                service: vich_uploader.namer_uniqid
+        user_rewards_dpoy:
+            uri_prefix: /images/user_rewards_dpoy
+            upload_destination: '%kernel.project_dir%/public/images/user_rewards_dpoy'
+            delete_on_remove:   true
+            namer:
+                service: vich_uploader.namer_uniqid
+

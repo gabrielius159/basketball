@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        {% set lightMode = false %}
+        {% block stylesheets %}
+
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                {% if app.session %}
+                    {% if app.session.get('lightMode') %}
+
+                        {% if app.session.get('lightMode') == true %}
+                            {{ encore_entry_link_tags('app') }}
+                            {{ encore_entry_link_tags('appLight') }}
+                            {% set lightMode = true %}
+                        {% else %}
+                            {{ encore_entry_link_tags('app') }}
+                        {% endif %}
+
+                    {% else %}
+                        {{ encore_entry_link_tags('app') }}
+                    {% endif %}
+
+                {% else %}
+                    {{ encore_entry_link_tags('app') }}
+                {% endif %}
+
+            {% else %}
+
+                {{ encore_entry_link_tags('app') }}
+
+            {% endif %}
+
+        {% endblock %}
+    </head>
+    <body>
+
+    {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+        <div class="container-fluid bg-success" style="min-height: 60px; color: white; font-weight: bold;"><!-- Switch user message -->
+            <div class="text-center pt-3">
+                You are currently switched to this user. <strong><a href="{{ path('home', {'_switch_user': '_exit'}) }}" class="text-white">Click here to leave impersonation</a></strong>
+            </div>
+        </div><!-- Switch user message -->
+    {% endif %}
+
+    {% include 'partials/_navbar.html.twig' %} <!-- Navigation -->
+
+        <div class="d-none" id="flash-message-js" style="min-height: 60px; color: white; font-weight: bold;">
+
+        </div>
+
+        {% for message in app.flashes('success') %} <!-- Success message -->
+            <div class="container-fluid text-center bg-warning {{ (app.session.flashbag.peek('warning')|length > 0 or app.session.flashbag.peek('draftPick')|length > 0) ? '' : 'mb-5' }}" id="flashMessageSuccess" style="min-height: 50px; color: white; padding-top: 13px; padding-bottom: 13px; font-weight: bold;">
+                <b>{{ message }}</b>
+            </div>
+        {% endfor %} <!-- Success message -->
+
+        {% for message in app.flashes('warning') %} <!-- Error message -->
+            <div class="container-fluid text-center bg-danger {{ app.session.flashbag.peek('draftPick')|length > 0 ? '' : 'mb-5' }}" id="flashMessageWarning" style="min-height: 50px; color: white; padding-top: 13px; padding-bottom: 13px; font-weight: bold;">
+                <b>{{ message }}</b>
+            </div>
+        {% endfor %} <!-- Error message -->
+
+        {% if app.session.flashbag.peek('draftPick')|length > 0 %} <!-- Draft message -->
+            <div class="container-fluid text-center bg-success mb-5" id="flashMessageDraftPick" style="min-height: 50px; color: white; padding-top: 13px; padding-bottom: 13px; font-weight: bold;">
+                <strong>Congratulations, you have been picked by <b>{{ app.flashes('teamName')|first }}</b> with the <b>{{ app.flashes('draftPick')|first }}</b> pick!</strong>
+            </div>
+        {% endif %} <!-- Draft message -->
+
+        {% block body %}{% endblock %}
+
+        <div class="container-fluid mt-5 mb-5 h-auto" style="background: {{ (app.session.get('lightMode') and app.session.get('lightMode') == true) ? 'white' : '#1E2024' }};"><!-- Footer container -->
+
+
+
+            <div class="container mt-5"><!-- Inner container -->
+
+
+
+                <div class="row mt-5">
+                    <div class="col text-center">
+
+                        <small class="text-muted text-center text-center">&copy; Created by Gabrielius Salichovas, PI16B</small>
+                    </div>
+
+                </div>
+
+
+
+            </div><!-- Inner container -->
+
+
+
+        </div><!-- Footer container -->
+
+        {% block javascripts %}
+
+            {{ encore_entry_script_tags('app') }}
+
+        {% endblock %}
+    </body>
+</html>

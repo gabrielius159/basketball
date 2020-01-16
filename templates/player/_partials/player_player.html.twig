@@ -1,0 +1,15 @@
+<div class="card text-white bg-custom-dark mb-3" style="width: 100%;"><!-- PlayerProfile -->
+    <div class="card-header pt-4 pb-4"><small class="font-weight-bold">{% if app.user.player == player %}My{% else %}{% endif %}</small>Player <small class="yellowColor font-weight-bold">{{ player.firstname }} {{ player.lastname }}</small></div>
+    <div class="card-image pt-2 pb-2 pr-2 pl-2">
+        {% if player.getIsRealPlayer == true %}
+            {% if player.image %}
+                <img src="{{ vich_uploader_asset(player, 'imageFile') }}" alt="" width="40" height="40">
+            {% else %}
+                <img src="{{ asset('images/fakePlayers/fakePlayer.jpg') }}" alt="" width="40" height="40">
+            {% endif %}
+        {% else %}
+            <img src="{{ asset('images/fakePlayers/fakePlayer.jpg') }}" height="120" width="120" class="img-thumbnail mt-2 mb-2" alt="">
+        {% endif %}
+
+    </div>
+</div><!-- PlayerProfile -->

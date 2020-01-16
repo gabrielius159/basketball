@@ -1,0 +1,36 @@
+<div class="row"><!-- Header -->
+    <div class="col-md-12">
+        <div class="card text-dark bg-custom-dark mb-3" style="width: 100%;">
+            <div class="card-header pt-4 pb-4">
+                Teams
+                <button type="button" class="btn btn-sm btn-outline-warning float-right text-uppercase" style="font-size: 10px !important;" data-toggle="modal" data-target="#exampleModal">
+                    Help
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for team in teams %}
+                        <div class="col-md-3">
+                            <div class="row justify-content-center">
+                                <a href="{{ path('team_view', {'id': team.id}) }}" class="text-decoration-none text-white-50">
+                                    <img src="{{ vich_uploader_asset(team, 'imageFile')|imagine_filter('my_player_image') }}" class="card-img pl-2 pr-2 d-block mr-auto ml-auto" style="height: 150px; width: 150px;" alt="...">
+                                </a>
+                            </div>
+                            <div class="row justify-content-center">
+                                <a href="{{ path('team_view', {'id': team.id}) }}" class="text-decoration-none text-black-50">{{ team.city }} {{ team.name }}</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- Header -->
+
+
+
+<div class="row justify-content-center">
+    <div class="navigation mt-4">
+        {{ knp_pagination_render(teams) }}
+    </div>
+</div>

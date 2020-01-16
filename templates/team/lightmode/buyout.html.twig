@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Buyout from team{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-5"><!-- Container -->
+
+
+
+        <div class="col-md-6 offset-md-3"><!-- Form -->
+            <div class="card text-dark bg-custom-dark mb-3" style="width: 100%;">
+                <div class="card-header pt-4 pb-4">Buyout from <span class="yellowColor font-weight-bold">{{ app.user.player.team.city }} {{ app.user.player.team.name }}</span></div>
+                <div class="card-body">
+                    <p>Are you sure you want to leave this team and become free agent?</p>
+
+                    {{ form_start(form) }}
+
+                    {{ form_widget(form) }}
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div><!-- Form -->
+
+
+
+    </div><!-- Container -->
+
+{% endblock %}

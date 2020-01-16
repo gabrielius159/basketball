@@ -1,0 +1,16 @@
+<div class="row"><!-- Row standings -->
+    <div class="col-md-12">
+        <div class="card text-white bg-custom-dark mb-3" style="width: 100%;">
+            <div class="card-header pt-4 pb-4">Last season Rookie of the year</div>
+            <div class="card-body pb-2 pt-2 text-center d-flex flex-column justify-content-center">
+
+                {% if roty %}
+                    <div><i class="fas fa-basketball-ball fa-3x"></i></div>
+                    <div><p class="card-text text-center mt-2"><a class="text-decoration-none noHoverYellow text-white" href="{{ path('player_index', {'id': roty.id}) }}">{{ roty.firstName }} {{ roty.lastName }}</a></p></div>
+                {% else %}
+                    <p class="card-text text-center">There were no rookie's in previous season.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div><!-- Row standings -->
