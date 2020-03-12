@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Season;
 use App\Entity\Server;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -20,7 +21,7 @@ class SeasonRepository extends ServiceEntityRepository
      *
      * @param RegistryInterface $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Season::class);
     }

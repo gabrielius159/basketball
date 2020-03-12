@@ -7,6 +7,7 @@ use App\Entity\Server;
 use App\Entity\TeamStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\Common\Collections\Collection;
 
@@ -23,7 +24,7 @@ class TeamStatusRepository extends ServiceEntityRepository
      *
      * @param RegistryInterface $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TeamStatus::class);
     }

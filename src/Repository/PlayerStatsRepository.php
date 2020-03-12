@@ -6,6 +6,7 @@ use App\Entity\Player;
 use App\Entity\PlayerStats;
 use App\Entity\Season;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -21,7 +22,7 @@ class PlayerStatsRepository extends ServiceEntityRepository
      *
      * @param RegistryInterface $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, PlayerStats::class);
     }
