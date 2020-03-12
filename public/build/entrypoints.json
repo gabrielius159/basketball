@@ -1,0 +1,58 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.ba2079ff.js",
+        "/build/0.103d46f3.js",
+        "/build/2.cf7449eb.js",
+        "/build/app.4052d021.js"
+      ],
+      "css": [
+        "/build/2.4f24004a.css",
+        "/build/app.a6fe3994.css"
+      ]
+    },
+    "new_player": {
+      "js": [
+        "/build/runtime.ba2079ff.js",
+        "/build/0.103d46f3.js",
+        "/build/new_player.061fb3cb.js"
+      ]
+    },
+    "homepage": {
+      "js": [
+        "/build/runtime.ba2079ff.js",
+        "/build/2.cf7449eb.js",
+        "/build/homepage.89632497.js"
+      ],
+      "css": [
+        "/build/2.4f24004a.css",
+        "/build/homepage.1c31c2f0.css"
+      ]
+    },
+    "scheduleAction": {
+      "js": [
+        "/build/runtime.ba2079ff.js",
+        "/build/0.103d46f3.js",
+        "/build/1.a18512d2.js",
+        "/build/scheduleAction.b33b8181.js"
+      ]
+    },
+    "playerSkills": {
+      "js": [
+        "/build/runtime.ba2079ff.js",
+        "/build/0.103d46f3.js",
+        "/build/1.a18512d2.js",
+        "/build/playerSkills.cf950bce.js"
+      ]
+    },
+    "appLight": {
+      "js": [
+        "/build/runtime.ba2079ff.js"
+      ],
+      "css": [
+        "/build/appLight.5ccaffbd.css"
+      ]
+    }
+  }
+}
