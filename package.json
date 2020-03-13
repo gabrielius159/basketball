@@ -1,9 +1,9 @@
 {
     "name": "myapp",
     "description": "a really cool app",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "engines": {
-        "node": "10.15.2",
+        "node": "v10.15.2",
         "yarn": "1.22.4"
     },
     "devDependencies": {
@@ -19,7 +19,7 @@
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
-        "heroku-prebuild": "npm install --dev",
+        "heroku-prebuild": "yarn install --production=false",
         "build": "encore production --progress"
     },
     "dependencies": {
@@ -27,6 +27,6 @@
         "jquery": "^3.4.1",
         "node-sass": "^4.12.0",
         "popper.js": "^1.15.0",
-        "sass-loader": "^7.0.1",
+        "sass-loader": "^7.0.1"
     }
 }
