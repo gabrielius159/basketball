@@ -1,4 +1,10 @@
 {
+    "name": "myapp",
+    "description": "a really cool app",
+    "version": "1.0.0",
+    "engines": {
+        "node": "10.15.2"
+    },
     "devDependencies": {
         "@fortawesome/fontawesome-free": "^5.11.1",
         "@symfony/webpack-encore": "^0.28.0",
