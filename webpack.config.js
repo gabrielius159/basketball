@@ -26,7 +26,6 @@ Encore
     .addEntry('app', './assets/js/app.js')
     .addEntry('new_player', './assets/js/new_player.js')
     .addEntry('homepage', './assets/js/homepage.js')
-    .addEntry('scheduleAction', './assets/js/scheduleAction.js')
     .addEntry('playerSkills', './assets/js/playerSkills.js')
     .addStyleEntry('appLight', './assets/css/app_light.css')
     //.addEntry('page2', './assets/js/page2.js')

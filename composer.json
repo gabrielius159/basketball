@@ -6,7 +6,6 @@
         "ext-ctype": "*",
         "ext-gd": "*",
         "ext-iconv": "*",
-        "friendsofsymfony/jsrouting-bundle": "^2.5",
         "fzaninotto/faker": "^1.8",
         "imagine/imagine": "0.7.1",
         "jms/serializer": "^3.4",
