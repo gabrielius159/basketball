@@ -4,6 +4,12 @@
 - NodeJs 10.15.2
 - Yarn 1.22.4
 
+## Production
+
+```
+https://cryptic-sea-71746.herokuapp.com/
+```
+
 ## Installation
 
 Just copy files from this repository to your project main directory and update .env.dist
