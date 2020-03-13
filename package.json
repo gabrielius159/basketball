@@ -19,6 +19,7 @@
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
+        "heroku-prebuild": "npm install --dev",
         "build": "encore production --progress"
     },
     "dependencies": {
