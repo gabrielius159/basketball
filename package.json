@@ -1,17 +1,13 @@
 {
-    "name": "app",
-    "description": "Basketball player manager",
+    "name": "myapp",
+    "description": "a really cool app",
     "version": "0.0.1",
     "engines": {
         "node": "v10.15.2",
         "yarn": "1.22.4"
     },
     "devDependencies": {
-        "@fortawesome/fontawesome-free": "^5.11.1",
-        "@symfony/webpack-encore": "^0.28.0",
-        "core-js": "^3.0.0",
-        "regenerator-runtime": "^0.13.2",
-        "webpack-notifier": "^1.6.0"
+
     },
     "license": "UNLICENSED",
     "private": true,
@@ -23,6 +19,11 @@
         "build": "node_modules/.bin/encore production --progress"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.11.1",
+        "@symfony/webpack-encore": "^0.28.0",
+        "core-js": "^3.0.0",
+        "regenerator-runtime": "^0.13.2",
+        "webpack-notifier": "^1.6.0",
         "bootstrap": "^4.3.1",
         "jquery": "^3.4.1",
         "node-sass": "^4.12.0",
