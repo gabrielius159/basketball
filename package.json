@@ -3,7 +3,8 @@
     "description": "a really cool app",
     "version": "1.0.0",
     "engines": {
-        "node": "10.15.2"
+        "node": "10.15.2",
+        "yarn": "1.22.4"
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free": "^5.11.1",
