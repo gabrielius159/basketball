@@ -55,4 +55,23 @@ class TeamRepository extends ServiceEntityRepository
 
         return $qb;
     }
+
+    /**
+     * @param Server $server
+     *
+     * @return int
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findCountOfTeamsWithoutCoach(Server $server): int
+    {
+        return $this->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+            ->leftJoin('t.coach', 'c', 'WITH', 'c.team = t.id')
+            ->where('c IS NULL')
+            ->andWhere('t.server = :server')
+            ->setParameter('server', $server)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

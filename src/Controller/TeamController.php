@@ -18,6 +18,7 @@ use App\Service\PlayerService;
 use App\Service\SeasonService;
 use App\Service\ServerService;
 use App\Service\TeamService;
+use App\Utils\Award;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -76,9 +77,9 @@ class TeamController extends BaseController
         $lastYearChampions = $seasonService->getLastSeasonChampions(
             $season
         );
-        $mvp = $seasonService->getLastSeasonMVP($season);
-        $dpoy = $seasonService->getLastSeasonDPOY($season);
-        $roty = $seasonService->getLastSeasonROTY($season);
+        $mvp = $seasonService->getLastSeasonAwardWinnerByAwardType($season, Award::PLAYER_MVP);
+        $dpoy = $seasonService->getLastSeasonAwardWinnerByAwardType($season, Award::PLAYER_DPOY);
+        $roty = $seasonService->getLastSeasonAwardWinnerByAwardType($season, Award::PLAYER_ROTY);
 
         return $this->render($this->getTemplateByTemplateMode($request, 'team/index.html.twig', 'team/lightmode/index.html.twig'), [
             'teams' => $teams,

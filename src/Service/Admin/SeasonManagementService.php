@@ -44,6 +44,8 @@ class SeasonManagementService
      * @param Season $season
      *
      * @return array
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function dispatchChoosenActionAndReturnMessage(int $choice, Season $season): array
     {
