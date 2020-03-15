@@ -30,6 +30,7 @@ use App\Repository\PlayerRepository;
 use App\Repository\TeamRepository;
 use App\Repository\TrainingCampRepository;
 use App\Repository\UserRepository;
+use App\Service\Admin\SeasonManagementService;
 use App\Service\AttributeService;
 use App\Service\BadgeService;
 use App\Service\CoachService;
@@ -614,21 +615,20 @@ class AdminController extends BaseController
     /**
      * @Route("/season", name="admin_season", methods={"GET", "POST"})
      *
-     * @param Request $request
-     * @param ServerService $serverService
-     * @param SeasonService $seasonService
-     * @param MessageBusInterface $messageBus
+     * @param Request                 $request
+     * @param ServerService           $serverService
+     * @param SeasonService           $seasonService
+     * @param SeasonManagementService $seasonManagementService
      *
      * @return Response
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Exception
      */
     public function season(
         Request $request,
         ServerService $serverService,
         SeasonService $seasonService,
-        MessageBusInterface $messageBus
+        SeasonManagementService $seasonManagementService
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -642,51 +642,8 @@ class AdminController extends BaseController
 
             $status = $form->getData()['status'];
 
-            switch($status) {
-                case SeasonStartFormType::SIMULATE_SEASON: {
-                    $messageBus->dispatch(new SimulateGames($season->getId(), $server->getId()));
-                    $this->addFlash('success', 'Simulation started.');
-
-                    break;
-                }
-                case SeasonStartFormType::SIMULATE_TWO_GAME: {
-                    $messageBus->dispatch(new SimulateTwoGames($season->getId()));
-
-                    $this->addFlash('success', 'You successfully simulated two games.');
-
-                    break;
-                }
-                case SeasonStartFormType::SIMULATE_ONE_GAME: {
-                    $messageBus->dispatch(new SimulateOneGame($season->getId()));
-
-                    $this->addFlash('success', 'You successfully simulated one game.');
-
-                    break;
-                }
-                case SeasonStartFormType::START_SEASON: {
-                    if(count($serverService->getCurrentServer()->getTeams()) <= 1) {
-                        $this->addFlash('warning', 'To start season, you have to create two teams.');
-
-                        return $this->redirectToRoute('admin_season');
-                    }
-
-                    if(!$seasonService->teamsHaveCoach($server)) {
-                        $this->addFlash('warning', 'There is teams that doesn\'t have coach.');
-
-                        return $this->redirectToRoute('admin_season');
-                    }
-
-                    $messageBus->dispatch(new StartSeason($server->getId(), $season->getId()));
-                    $this->addFlash('success', 'You successfully started season.');
-
-                    break;
-                }
-                default: {
-                    $this->addFlash('warning', 'Action was not found.');
-
-                    break;
-                }
-            }
+            list($key, $message) = $seasonManagementService->dispatchChoosenActionAndReturnMessage($status, $season);
+            $this->addFlash($key, $message);
 
             return $this->redirectToRoute('admin_season');
         }
