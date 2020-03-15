@@ -18,6 +18,8 @@ use App\Entity\Server;
 use App\Entity\Team;
 use App\Entity\TeamAward;
 use App\Entity\TeamStatus;
+use App\Event\CreatePlayerStatsEvent;
+use App\Event\CreateTeamStatusEvent;
 use App\Model\Game;
 use App\Model\PlayerScore;
 use App\Repository\GameDayRepository;
@@ -29,6 +31,7 @@ use App\Utils\Award;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 use Faker\Generator;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 
 /**
@@ -79,15 +82,21 @@ class SeasonService
     private $teamStatusRepository;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * SeasonService constructor.
      *
-     * @param SeasonRepository $seasonRepository
-     * @param PlayerStatsRepository $playerStatsRepository
-     * @param EntityManagerInterface $entityManager
-     * @param GameDayRepository $gameDayRepository
-     * @param PlayerRepository $playerRepository
-     * @param AttributeService $attributeService
-     * @param TeamStatusRepository $teamStatusRepository
+     * @param SeasonRepository         $seasonRepository
+     * @param PlayerStatsRepository    $playerStatsRepository
+     * @param EntityManagerInterface   $entityManager
+     * @param GameDayRepository        $gameDayRepository
+     * @param PlayerRepository         $playerRepository
+     * @param AttributeService         $attributeService
+     * @param TeamStatusRepository     $teamStatusRepository
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         SeasonRepository $seasonRepository,
@@ -96,7 +105,8 @@ class SeasonService
         GameDayRepository $gameDayRepository,
         PlayerRepository $playerRepository,
         AttributeService $attributeService,
-        TeamStatusRepository $teamStatusRepository
+        TeamStatusRepository $teamStatusRepository,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->seasonRepository = $seasonRepository;
         $this->playerStatsRepository = $playerStatsRepository;
@@ -105,6 +115,7 @@ class SeasonService
         $this->playerRepository = $playerRepository;
         $this->attributeService = $attributeService;
         $this->teamStatusRepository = $teamStatusRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -116,38 +127,13 @@ class SeasonService
      */
     public function getActiveSeason(Server $server): Season
     {
-        /**
-         * @var Season $season
-         */
         $season = $this->seasonRepository->getActiveSeason($server);
 
-        if($season) {
-            return $season;
+        if(!$season instanceof Season) {
+            $season = self::createAndReturnNewSeason($server);
         }
 
-        $newSeason = self::createAndReturnNewSeason($server);
-
-        return $newSeason;
-    }
-
-    /**
-     * @param Server $server
-     *
-     * @return Season
-     */
-    public function createAndReturnNewSeason(Server $server)
-    {
-        $newSeason = (new Season())
-            ->setStatus(Season::STATUS_PREPARING)
-            ->setServer($server)
-        ;
-
-        $this->entityManager->persist($newSeason);
-        $this->entityManager->flush();
-
-        self::createNewEntities($server, $newSeason);
-
-        return $newSeason;
+        return $season;
     }
 
     /**
@@ -159,7 +145,7 @@ class SeasonService
     {
         $activeSeason = $this->seasonRepository->getActiveSeason($server);
 
-        if(!$activeSeason) {
+        if(!$activeSeason instanceof Season) {
             $newSeason = (new Season())
                 ->setStatus(Season::STATUS_PREPARING)
                 ->setServer($server)
@@ -168,7 +154,7 @@ class SeasonService
             $this->entityManager->persist($newSeason);
             $this->entityManager->flush();
 
-            self::createNewEntities($server, $newSeason);
+            self::createNewEntities($newSeason);
         }
     }
 
@@ -183,74 +169,11 @@ class SeasonService
     {
         $season = $this->seasonRepository->getActiveSeason($server);
 
-        return $season ? true: false;
+        return $season instanceof Season;
     }
 
     /**
-     * @param Server $server
-     * @param Season $season
-     */
-    public function createNewEntities(Server $server, Season $season)
-    {
-        $players = $this->entityManager->getRepository(Player::class)
-            ->findBy([
-                'server' => $server
-        ]);
-
-        $countOfPlayers = count($players);
-
-        if($countOfPlayers > 0) {
-            $numberOfChunks = intval(ceil(($countOfPlayers / 1000)));
-            $chunks = array_chunk($players, $numberOfChunks);
-
-            foreach($chunks as $chunk) {
-                foreach($chunk as $player) {
-                    $newPlayerStats = (new PlayerStats())
-                        ->setSeason($season)
-                        ->setPlayer($player)
-                        ->setSteals(0)
-                        ->setRebounds(0)
-                        ->setPoints(0)
-                        ->setBlocks(0)
-                        ->setAssists(0)
-                        ->setGamesPlayed(0);
-
-                    $this->entityManager->persist($newPlayerStats);
-                }
-
-                $this->entityManager->flush();
-            }
-        }
-
-        $teams = $this->entityManager->getRepository(Team::class)
-            ->findBy([
-                'server' => $server
-        ]);
-
-        $countOfTeams = count($teams);
-
-        if($countOfTeams > 0) {
-            $numberOfChunks = intval(ceil(($countOfTeams / 1000)));
-            $chunks = array_chunk($teams, $numberOfChunks);
-
-            foreach($chunks as $chunk) {
-                foreach($chunk as $team) {
-                    $newTeamStats = (new TeamStatus())
-                        ->setSeason($season)
-                        ->setTeam($team)
-                        ->setLose(0)
-                        ->setPoints(0)
-                        ->setWin(0)
-                        ;
-
-                    $this->entityManager->persist($newTeamStats);
-                    $this->entityManager->flush();
-                }
-            }
-        }
-    }
-
-    /**
+     * @todo refactor this function and return array with image
      * @param Server $server
      *
      * @return array
@@ -279,23 +202,27 @@ class SeasonService
      *
      * @return null|Team
      */
-    public function getLastSeasonChampions(Season $season)
+    public function getLastSeasonChampions(Season $season): ?Team
     {
-        /**
-         * @var Season $lastSeason
-         */
         $lastSeason = $this->entityManager->getRepository(Season::class)->find($season->getId() -1);
 
-        if($lastSeason) {
-            if($lastSeason->getTeamAward()) {
-                $team = $lastSeason->getTeamAward()->getTeam();
-                if($team) {
-                    return $team;
-                }
-            }
+        if (!$lastSeason instanceof Season) {
+            return null;
         }
 
-        return null;
+        $teamAward = $lastSeason->getTeamAward();
+
+        if (!$teamAward instanceof TeamAward) {
+            return null;
+        }
+
+        $team = $teamAward->getTeam();
+
+        if (!$team instanceof Team) {
+            return null;
+        }
+
+        return $team;
     }
 
     /**
@@ -303,27 +230,30 @@ class SeasonService
      *
      * @return null|Player
      */
-    public function getLastSeasonMVP(Season $season)
+    public function getLastSeasonMVP(Season $season): ?Player
     {
-        /**
-         * @var Season $lastSeason
-         */
         $lastSeason = $this->entityManager->getRepository(Season::class)->find($season->getId() -1);
 
-        if($lastSeason) {
-            $mvp = $this->entityManager->getRepository(PlayerAward::class)->findOneBy([
-                'season' => $lastSeason,
-                'award' => Award::PLAYER_MVP
-            ]);
-
-            if(!$mvp) {
-                return null;
-            }
-
-            return $mvp->getPlayer();
+        if (!$lastSeason instanceof Season) {
+            return null;
         }
 
-        return null;
+        $mvp = $this->entityManager->getRepository(PlayerAward::class)->findOneBy([
+            'season' => $lastSeason,
+            'award' => Award::PLAYER_MVP
+        ]);
+
+        if (!$mvp instanceof PlayerAward) {
+            return null;
+        }
+
+        $player = $mvp->getPlayer();
+
+        if (!$player instanceof Player) {
+            return null;
+        }
+
+        return $player;
     }
 
     /**
@@ -331,27 +261,30 @@ class SeasonService
      *
      * @return null|Player
      */
-    public function getLastSeasonDPOY(Season $season)
+    public function getLastSeasonDPOY(Season $season): ?Player
     {
-        /**
-         * @var Season $lastSeason
-         */
         $lastSeason = $this->entityManager->getRepository(Season::class)->find($season->getId() -1);
 
-        if($lastSeason) {
-            $dpoy = $this->entityManager->getRepository(PlayerAward::class)->findOneBy([
-                'season' => $lastSeason,
-                'award' => Award::PLAYER_DPOY
-            ]);
-
-            if(!$dpoy) {
-                return null;
-            }
-
-            return $dpoy->getPlayer();
+        if (!$lastSeason instanceof Season) {
+            return null;
         }
 
-        return null;
+        $dpoy = $this->entityManager->getRepository(PlayerAward::class)->findOneBy([
+            'season' => $lastSeason,
+            'award' => Award::PLAYER_DPOY
+        ]);
+
+        if (!$dpoy instanceof PlayerAward) {
+            return null;
+        }
+
+        $player = $dpoy->getPlayer();
+
+        if (!$player instanceof Player) {
+            return null;
+        }
+
+        return $player;
     }
 
     /**
@@ -361,25 +294,28 @@ class SeasonService
      */
     public function getLastSeasonROTY(Season $season): ?Player
     {
-        /**
-         * @var Season $lastSeason
-         */
         $lastSeason = $this->entityManager->getRepository(Season::class)->find($season->getId() -1);
 
-        if($lastSeason) {
-            $roty = $this->entityManager->getRepository(PlayerAward::class)->findOneBy([
-                'season' => $lastSeason,
-                'award' => Award::PLAYER_ROTY
-            ]);
-
-            if(!$roty) {
-                return null;
-            }
-
-            return $roty->getPlayer();
+        if (!$lastSeason instanceof Season) {
+            return null;
         }
 
-        return null;
+        $roty = $this->entityManager->getRepository(PlayerAward::class)->findOneBy([
+            'season' => $lastSeason,
+            'award' => Award::PLAYER_ROTY
+        ]);
+
+        if (!$roty instanceof PlayerAward) {
+            return null;
+        }
+
+        $player = $roty->getPlayer();
+
+        if (!$player instanceof Player) {
+            return null;
+        }
+
+        return $player;
     }
 
     /**
@@ -1486,5 +1422,38 @@ class SeasonService
             $this->entityManager->persist($playerAttribute);
             $this->entityManager->flush();
         }
+    }
+
+
+    /**
+     * @param Server $server
+     *
+     * @return Season
+     */
+    private function createAndReturnNewSeason(Server $server)
+    {
+        $newSeason = (new Season())
+            ->setStatus(Season::STATUS_PREPARING)
+            ->setServer($server)
+        ;
+
+        $this->entityManager->persist($newSeason);
+        $this->entityManager->flush();
+
+        self::createNewEntities($newSeason);
+
+        return $newSeason;
+    }
+
+    /**
+     * @param Season $season
+     */
+    private function createNewEntities(Season $season): void
+    {
+        $playerStatsEvent = new CreatePlayerStatsEvent($season);
+        $this->eventDispatcher->dispatch($playerStatsEvent, CreatePlayerStatsEvent::NAME);
+
+        $teamStatusEvent = new CreateTeamStatusEvent($season);
+        $this->eventDispatcher->dispatch($teamStatusEvent, CreateTeamStatusEvent::NAME);
     }
 }

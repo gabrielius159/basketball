@@ -639,7 +639,6 @@ class AdminController extends BaseController
         $season = $seasonService->getActiveSeason($server);
 
         if($form->isSubmitted() && $form->isValid()) {
-
             $status = $form->getData()['status'];
 
             list($key, $message) = $seasonManagementService->dispatchChoosenActionAndReturnMessage($status, $season);

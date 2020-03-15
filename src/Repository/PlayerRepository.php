@@ -154,4 +154,24 @@ class PlayerRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    /**
+     * @param Server $server
+     * @param bool   $query
+     *
+     * @return \Doctrine\ORM\Query|mixed
+     */
+    public function findPlayerByServer(Server $server, bool $query = false)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.server = :server')
+            ->setParameter('server', $server)
+            ->getQuery();
+
+        if (!$query) {
+            return $qb->getResult();
+        }
+
+        return $qb;
+    }
 }

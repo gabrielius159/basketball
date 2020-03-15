@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Server;
 use App\Entity\Team;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -35,32 +36,23 @@ class TeamRepository extends ServiceEntityRepository
             ;
     }
 
-    // /**
-    //  * @return Team[] Returns an array of Team objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Server $server
+     * @param bool   $query
+     *
+     * @return \Doctrine\ORM\Query|mixed
+     */
+    public function findTeamsByServer(Server $server, bool $query = false)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('t')
+            ->where('t.server = :server')
+            ->setParameter('server', $server)
+            ->getQuery();
 
-    /*
-    public function findOneBySomeField($value): ?Team
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        if (!$query) {
+            return $qb->getResult();
+        }
+
+        return $qb;
     }
-    */
 }

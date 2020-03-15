@@ -51,6 +51,8 @@ class SeasonManagementService
             case SeasonStartFormType::SIMULATE_SEASON: {
                 $this->messageBus->dispatch(new SimulateGames($season->getId(), $season->getServer()->getId()));
 
+                sleep(3);
+
                 return [self::SUCCESS_KEY, self::MESSAGE_SIMULATION_STARTED];
             }
             case SeasonStartFormType::SIMULATE_TWO_GAME: {
