@@ -79,24 +79,30 @@ class PlayerRepository extends ServiceEntityRepository
 
     /**
      * @param Server $server
-     * @param int $season
+     * @param int    $season
+     * @param bool   $returnQuery
      *
-     * @return mixed
+     * @return \Doctrine\ORM\Query|mixed
      */
-    public function getRealPlayersWithExpiringContract(Server $server, int $season)
+    public function getRealPlayersWithExpiringContract(Server $server, int $season, bool $returnQuery = false)
     {
-        return $this->createQueryBuilder('p')
-            ->where('p.isRealPlayer = :realPlayer')
-            ->andWhere('p.server = :server')
-            ->andWhere('p.seasonEndsContract <= :season')
-            ->setParameters([
-                'realPlayer' => true,
-                'server' => $server,
-                'season' => $season
-            ])
-            ->getQuery()
-            ->getResult()
+        $qb = $this->createQueryBuilder('p')
+               ->where('p.isRealPlayer = :realPlayer')
+               ->andWhere('p.server = :server')
+               ->andWhere('p.seasonEndsContract <= :season')
+               ->setParameters([
+                   'realPlayer' => true,
+                   'server' => $server,
+                   'season' => $season
+               ])
+               ->getQuery()
         ;
+
+        if ($returnQuery) {
+            return $qb;
+        }
+
+        return $qb->getResult();
     }
 
     /**
@@ -173,5 +179,22 @@ class PlayerRepository extends ServiceEntityRepository
         }
 
         return $qb;
+    }
+
+    /**
+     * @param bool $query
+     *
+     * @return \Doctrine\ORM\Query|mixed
+     */
+    public function findAllPlayers(bool $query = false)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->getQuery();
+
+        if ($query) {
+            return $qb;
+        }
+
+        return $qb->getResult();
     }
 }

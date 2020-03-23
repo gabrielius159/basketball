@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Service;
 
@@ -17,10 +17,8 @@ use App\Entity\Season;
 use App\Entity\Server;
 use App\Entity\Team;
 use App\Entity\TeamAward;
-use App\Entity\TeamStatus;
 use App\Event\CreatePlayerStatsEvent;
 use App\Event\CreateTeamStatusEvent;
-use App\Model\Game;
 use App\Model\PlayerScore;
 use App\Repository\GameDayRepository;
 use App\Repository\PlayerRepository;
@@ -28,7 +26,6 @@ use App\Repository\PlayerStatsRepository;
 use App\Repository\SeasonRepository;
 use App\Repository\TeamRepository;
 use App\Repository\TeamStatusRepository;
-use App\Utils\Award;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 use Faker\Generator;

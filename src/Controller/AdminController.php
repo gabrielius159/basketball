@@ -11,6 +11,7 @@ use App\Entity\Server;
 use App\Entity\Team;
 use App\Entity\TrainingCamp;
 use App\Entity\UserReward;
+use App\Event\CreatePlayerAttributeForPlayersEvent;
 use App\Form\AttributeType;
 use App\Form\BadgeType;
 use App\Form\ChangeCoachType;
@@ -45,6 +46,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @Route("/admin")
@@ -66,13 +68,15 @@ class AdminController extends BaseController
     /**
      * @Route("/new-attribute", name="new_attribute", methods={"GET", "POST"})
      *
-     * @param AttributeService $attributeService
-     * @param Request $request
+     * @param Request                  $request
+     * @param EventDispatcherInterface $eventDispatcher
      *
      * @return Response
      */
-    public function createAttribute(AttributeService $attributeService, Request $request): Response
-    {
+    public function createAttribute(
+        Request $request,
+        EventDispatcherInterface $eventDispatcher
+    ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $attribute = new Attribute();
@@ -86,7 +90,9 @@ class AdminController extends BaseController
             $em->persist($attribute);
             $em->flush();
 
-            $attributeService->createPlayerAttributeForAllPlayers($attribute);
+            $event = new CreatePlayerAttributeForPlayersEvent($attribute);
+            $eventDispatcher->dispatch($event, CreatePlayerAttributeForPlayersEvent::NAME);
+
             $this->addFlash('success', 'Attribute created successfully.');
 
             return $this->redirectToRoute('new_attribute');

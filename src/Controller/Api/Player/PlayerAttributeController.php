@@ -45,7 +45,10 @@ class PlayerAttributeController extends BaseController
             return new JsonResponse(['error' => 'Page not found'], 404);
         }
 
-        $playerAttributes = $playerAttributeService->getPlayerPlayerAttributes($playerId, $this->getUser()->getPlayer()->getId() == $playerId);
+        $playerAttributes = $playerAttributeService->getPlayerPlayerAttributes(
+            $playerId,
+            $this->getUser()->getPlayer()->getId() === $playerId
+        );
 
         if(!$playerAttributes) {
             return new JsonResponse(['items' => [], 'playerId' => $playerId]);

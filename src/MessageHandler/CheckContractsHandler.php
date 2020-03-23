@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\MessageHandler;
 
@@ -16,21 +16,16 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
  */
 class CheckContractsHandler implements MessageHandlerInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    const BATCH_SIZE = 50;
 
-    /**
-     * @var PlayerRepository
-     */
+    private $entityManager;
     private $playerRepository;
 
     /**
      * CheckContractsHandler constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param PlayerRepository $playerRepository
+     * @param PlayerRepository       $playerRepository
      */
     public function __construct(EntityManagerInterface $entityManager, PlayerRepository $playerRepository)
     {
@@ -43,29 +38,34 @@ class CheckContractsHandler implements MessageHandlerInterface
      */
     public function __invoke(CheckContracts $message)
     {
+        $i = 1;
+
         $server = $this->entityManager->getRepository(Server::class)->find($message->getServerId());
-        $players = $this->playerRepository->getRealPlayersWithExpiringContract($server, $message->getSeasonId());
+        $playersWithExpiringContractQuery = $this->playerRepository->getRealPlayersWithExpiringContract(
+            $server,
+            $message->getSeasonId(),
+            true
+        );
 
-        if($playerNumber = count($players) > 0) {
-            $numberOfChunks = intval(ceil($playerNumber / 1000));
-            $chunks = array_chunk($players, $numberOfChunks);
+        $iterableResult = $playersWithExpiringContractQuery->iterate();
 
-            foreach($chunks as $chunk) {
-                /**
-                 * @var Player $player
-                 */
-                foreach($chunk as $player) {
-                    $player->setTeam(null);
-                    $player->setContractSalary(null);
-                    $player->setContractYears(null);
-                    $player->setJerseyNumber(null);
-                    $player->setSeasonEndsContract(null);
-                }
+        foreach ($iterableResult as $row) {
+            $player = $row[0];
 
+            $player->setTeam(null);
+            $player->setContractSalary(null);
+            $player->setContractYears(null);
+            $player->setJerseyNumber(null);
+            $player->setSeasonEndsContract(null);
+
+            if (($i % self::BATCH_SIZE) === 0) {
                 $this->entityManager->flush();
+                $this->entityManager->clear(Player::class);
             }
+
+            ++$i;
         }
 
-        $this->entityManager->clear();
+        $this->entityManager->flush();
     }
 }

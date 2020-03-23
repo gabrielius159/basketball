@@ -91,7 +91,7 @@ class PlayerStatsService
            'player' => $player
         ]);
 
-        if(!$playerStats) {
+        if(!$playerStats instanceof PlayerStats) {
             self::createPlayerStatsOnPlayerCreate($player);
 
             $playerStats = $this->entityManager->getRepository(PlayerStats::class)->findOneBy([

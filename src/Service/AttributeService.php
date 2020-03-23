@@ -33,34 +33,6 @@ class AttributeService
     }
 
     /**
-     * @param Attribute $attribute
-     */
-    public function createPlayerAttributeForAllPlayers(Attribute $attribute)
-    {
-        $playerRepository = $this->em->getRepository(Player::class);
-
-        $players = $playerRepository->findAll();
-
-        if($numberOfPlayers = count($players) > 0) {
-            $numberOfChunks = intval(ceil($numberOfPlayers / 1000));
-            $chunks = array_chunk($players, $numberOfChunks);
-
-            foreach($chunks as $chunk) {
-                foreach($chunk as $player) {
-                    $playerAttribute = (new PlayerAttribute())
-                        ->setPlayer($player)
-                        ->setAttribute($attribute)
-                        ->setValue($attribute->getDefaultValue());
-
-                    $this->em->persist($playerAttribute);
-                }
-
-                $this->em->flush();
-            }
-        }
-    }
-
-    /**
      * @param Player $player
      */
     public function createAttributesForPlayer(Player $player)

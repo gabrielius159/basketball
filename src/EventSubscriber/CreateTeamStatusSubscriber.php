@@ -68,7 +68,7 @@ class CreateTeamStatusSubscriber implements EventSubscriberInterface
 
             if (($i % self::BATCH_SIZE) === 0) {
                 $this->entityManager->flush();
-                $this->entityManager->clear();
+                $this->entityManager->clear(TeamStatus::class);
             }
 
             ++$i;
