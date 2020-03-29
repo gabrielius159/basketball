@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Server;
 use App\Entity\Team;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -35,32 +36,86 @@ class TeamRepository extends ServiceEntityRepository
             ;
     }
 
-    // /**
-    //  * @return Team[] Returns an array of Team objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Server $server
+     * @param bool   $query
+     *
+     * @return \Doctrine\ORM\Query|mixed
+     */
+    public function findTeamsByServer(Server $server, bool $query = false)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('t')
+            ->where('t.server = :server')
+            ->setParameter('server', $server)
+            ->getQuery();
 
-    /*
-    public function findOneBySomeField($value): ?Team
+        if (!$query) {
+            return $qb->getResult();
+        }
+
+        return $qb;
+    }
+
+    /**
+     * @param Server $server
+     *
+     * @return int
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findCountOfTeamsWithoutCoach(Server $server): int
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
+            ->select('COUNT(t.id)')
+            ->leftJoin('t.coach', 'c', 'WITH', 'c.team = t.id')
+            ->where('c IS NULL')
+            ->andWhere('t.server = :server')
+            ->setParameter('server', $server)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getSingleScalarResult();
     }
-    */
+
+    /**
+     * @param Server $server
+     *
+     * @return array
+     */
+    public function findAllTeamIdsByServer(Server $server): array
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t.id')
+            ->where('t.server = :server')
+            ->setParameter('server', $server)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * @param Server $server
+     * @param Team   $team
+     * @param string $position
+     *
+     * @return int
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findCountOfPositionByServerAndTeamId(Server $server, Team $team, string $position): int
+    {
+        $parameters = [
+            'server' => $server,
+            'team' => $team->getId(),
+            'position' => $position
+        ];
+
+        return $this->createQueryBuilder('t')
+            ->select('COUNT(p.id)')
+            ->leftJoin('t.players', 'p')
+            ->leftJoin('p.position', 'pp')
+            ->where('t.server = :server')
+            ->andWhere('t.id = :team')
+            ->andWhere('pp.name = :position')
+            ->setParameters($parameters)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

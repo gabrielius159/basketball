@@ -7,10 +7,11 @@ use App\Entity\Badge;
 use App\Entity\Coach;
 use App\Entity\Player;
 use App\Entity\Season;
-use App\Entity\Server;
 use App\Entity\Team;
 use App\Entity\TrainingCamp;
 use App\Entity\UserReward;
+use App\Event\CreateNewTeamTeamStatusEvent;
+use App\Event\CreatePlayerAttributeForPlayersEvent;
 use App\Form\AttributeType;
 use App\Form\BadgeType;
 use App\Form\ChangeCoachType;
@@ -19,10 +20,6 @@ use App\Form\SeasonStartFormType;
 use App\Form\TeamType;
 use App\Form\TrainingCampType;
 use App\Form\UserRewardType;
-use App\Message\SimulateGames;
-use App\Message\SimulateOneGame;
-use App\Message\SimulateTwoGames;
-use App\Message\StartSeason;
 use App\Repository\AttributeRepository;
 use App\Repository\BadgeRepository;
 use App\Repository\CoachRepository;
@@ -30,20 +27,16 @@ use App\Repository\PlayerRepository;
 use App\Repository\TeamRepository;
 use App\Repository\TrainingCampRepository;
 use App\Repository\UserRepository;
-use App\Service\AttributeService;
-use App\Service\BadgeService;
-use App\Service\CoachService;
-use App\Service\PlayerService;
+use App\Service\Admin\SeasonManagementService;
+use App\Service\FakePlayerService;
 use App\Service\SeasonService;
 use App\Service\ServerService;
 use App\Service\TeamService;
-use App\Service\TeamStatusService;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @Route("/admin")
@@ -65,13 +58,15 @@ class AdminController extends BaseController
     /**
      * @Route("/new-attribute", name="new_attribute", methods={"GET", "POST"})
      *
-     * @param AttributeService $attributeService
-     * @param Request $request
+     * @param Request                  $request
+     * @param EventDispatcherInterface $eventDispatcher
      *
      * @return Response
      */
-    public function createAttribute(AttributeService $attributeService, Request $request): Response
-    {
+    public function createAttribute(
+        Request $request,
+        EventDispatcherInterface $eventDispatcher
+    ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $attribute = new Attribute();
@@ -85,7 +80,9 @@ class AdminController extends BaseController
             $em->persist($attribute);
             $em->flush();
 
-            $attributeService->createPlayerAttributeForAllPlayers($attribute);
+            $event = new CreatePlayerAttributeForPlayersEvent($attribute);
+            $eventDispatcher->dispatch($event, CreatePlayerAttributeForPlayersEvent::NAME);
+
             $this->addFlash('success', 'Attribute created successfully.');
 
             return $this->redirectToRoute('new_attribute');
@@ -104,9 +101,9 @@ class AdminController extends BaseController
     /**
      * @Route("/attributes", name="list_attribute", methods={"GET"})
      *
-     * @param Request $request
+     * @param Request             $request
      * @param AttributeRepository $attributeRepository
-     * @param PaginatorInterface $paginator
+     * @param PaginatorInterface  $paginator
      *
      * @return Response
      */
@@ -134,7 +131,7 @@ class AdminController extends BaseController
      * @Route("/attributes/delete/{id}", name="delete_attribute")
      *
      * @param AttributeRepository $attributeRepository
-     * @param int $id
+     * @param int                 $id
      *
      * @return Response
      */
@@ -161,17 +158,17 @@ class AdminController extends BaseController
     /**
      * @Route("/new-team", name="new_team", methods={"GET", "POST"})
      *
-     * @param TeamStatusService $teamStatusService
-     * @param Request $request
-     * @param ServerService $serverService
-     * @param SeasonService $seasonService
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param Request                  $request
+     * @param ServerService            $serverService
+     * @param SeasonService            $seasonService
      *
      * @return Response
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function createTeam(
-        TeamStatusService $teamStatusService,
+        EventDispatcherInterface $eventDispatcher,
         Request $request,
         ServerService $serverService,
         SeasonService $seasonService
@@ -196,7 +193,9 @@ class AdminController extends BaseController
             $em->persist($team);
             $em->flush();
 
-            $teamStatusService->createTeamStatusOnTeamCreate($team);
+            $event = new CreateNewTeamTeamStatusEvent($team);
+            $eventDispatcher->dispatch($event, CreateNewTeamTeamStatusEvent::NAME);
+
             $this->addFlash('success', 'Team created successfully.');
 
             return $this->redirectToRoute('new_team');
@@ -215,8 +214,8 @@ class AdminController extends BaseController
     /**
      * @Route("/teams", name="list_team", methods={"GET"})
      *
-     * @param Request $request
-     * @param TeamRepository $teamRepository
+     * @param Request            $request
+     * @param TeamRepository     $teamRepository
      * @param PaginatorInterface $paginator
      *
      * @return Response
@@ -248,7 +247,7 @@ class AdminController extends BaseController
      * @Route("/teams/delete/{id}", name="delete_team")
      *
      * @param TeamService $teamService
-     * @param int $id
+     * @param int         $id
      *
      * @return Response
      */
@@ -310,8 +309,8 @@ class AdminController extends BaseController
     /**
      * @Route("/coaches", name="list_coach", methods={"GET"})
      *
-     * @param Request $request
-     * @param CoachRepository $coachRepository
+     * @param Request            $request
+     * @param CoachRepository    $coachRepository
      * @param PaginatorInterface $paginator
      *
      * @return Response
@@ -339,16 +338,16 @@ class AdminController extends BaseController
     /**
      * @Route("/coaches/delete/{id}", name="delete_coach")
      *
-     * @param CoachService $coachService
-     * @param int $id
+     * @param CoachRepository $coachRepository
+     * @param int             $id
      *
      * @return Response
      */
-    public function deleteCoach(CoachService $coachService, int $id): Response
+    public function deleteCoach(CoachRepository $coachRepository, int $id): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $coach = $coachService->findOneById($id);
+        $coach = $coachRepository->find($id);
 
         if(!$coach) {
             $this->addFlash('warning', 'Coach couldn\'t be found.');
@@ -410,9 +409,9 @@ class AdminController extends BaseController
     /**
      * @Route("/badges", name="list_badge", methods={"GET"})
      *
-     * @param Request $request
+     * @param Request            $request
      * @param PaginatorInterface $paginator
-     * @param BadgeRepository $badgeRepository
+     * @param BadgeRepository    $badgeRepository
      *
      * @return Response
      */
@@ -439,16 +438,16 @@ class AdminController extends BaseController
     /**
      * @Route("/badges/delete/{id}", name="delete_badge")
      *
-     * @param BadgeService $badgeService
-     * @param int $id
+     * @param BadgeRepository $badgeRepository
+     * @param int             $id
      *
      * @return Response
      */
-    public function deleteBadge(BadgeService $badgeService, int $id): Response
+    public function deleteBadge(BadgeRepository $badgeRepository, int $id): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $badge = $badgeService->findOneById($id);
+        $badge = $badgeRepository->find($id);
 
         if(!$badge) {
             $this->addFlash('warning', 'Badge couldn\'t be found.');
@@ -469,8 +468,8 @@ class AdminController extends BaseController
      * @Route("/players", name="list_player", methods={"GET"})
      *
      * @param PaginatorInterface $paginator
-     * @param PlayerRepository $playerRepository
-     * @param Request $request
+     * @param PlayerRepository   $playerRepository
+     * @param Request            $request
      *
      * @return Response
      */
@@ -503,8 +502,8 @@ class AdminController extends BaseController
      * @Route("/players/delete-all", name="delete_players")
      *
      * @param PlayerRepository $playerRepository
-     * @param ServerService $serverService
-     * @param SeasonService $seasonService
+     * @param ServerService    $serverService
+     * @param SeasonService    $seasonService
      *
      * @return Response
      *
@@ -574,9 +573,11 @@ class AdminController extends BaseController
     /**
      * @Route("/players/delete/{id}", name="delete_player")
      *
-     * @param int $id
-     * @param PlayerRepository $playerRepository
-     * @param SeasonService $seasonService
+     * @param int               $id
+     * @param PlayerRepository  $playerRepository
+     * @param SeasonService     $seasonService
+     * @param FakePlayerService $fakePlayerService
+     *
      * @return Response
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -584,7 +585,8 @@ class AdminController extends BaseController
     public function deletePlayer(
         int $id,
         PlayerRepository $playerRepository,
-        SeasonService $seasonService
+        SeasonService $seasonService,
+        FakePlayerService $fakePlayerService
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -597,9 +599,9 @@ class AdminController extends BaseController
         }
 
         if($seasonService->getActiveSeason($player->getServer())->getStatus() === Season::STATUS_ACTIVE
-            && $player->getTeam() != null
+            && $player->getTeam() instanceof Team
             && (count($player->getTeam()->getPlayers()) - 1) < 10) {
-            $seasonService->createFakePlayer($player->getTeam(), $player->getPosition()->getName(), 1);
+            $fakePlayerService->createFakePlayer($player->getTeam(), $player->getPosition()->getName(), 1);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -614,21 +616,20 @@ class AdminController extends BaseController
     /**
      * @Route("/season", name="admin_season", methods={"GET", "POST"})
      *
-     * @param Request $request
-     * @param ServerService $serverService
-     * @param SeasonService $seasonService
-     * @param MessageBusInterface $messageBus
+     * @param Request                 $request
+     * @param ServerService           $serverService
+     * @param SeasonService           $seasonService
+     * @param SeasonManagementService $seasonManagementService
      *
      * @return Response
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Exception
      */
     public function season(
         Request $request,
         ServerService $serverService,
         SeasonService $seasonService,
-        MessageBusInterface $messageBus
+        SeasonManagementService $seasonManagementService
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -639,54 +640,10 @@ class AdminController extends BaseController
         $season = $seasonService->getActiveSeason($server);
 
         if($form->isSubmitted() && $form->isValid()) {
-
             $status = $form->getData()['status'];
 
-            switch($status) {
-                case SeasonStartFormType::SIMULATE_SEASON: {
-                    $messageBus->dispatch(new SimulateGames($season->getId(), $server->getId()));
-                    $this->addFlash('success', 'Simulation started.');
-
-                    break;
-                }
-                case SeasonStartFormType::SIMULATE_TWO_GAME: {
-                    $messageBus->dispatch(new SimulateTwoGames($season->getId()));
-
-                    $this->addFlash('success', 'You successfully simulated two games.');
-
-                    break;
-                }
-                case SeasonStartFormType::SIMULATE_ONE_GAME: {
-                    $messageBus->dispatch(new SimulateOneGame($season->getId()));
-
-                    $this->addFlash('success', 'You successfully simulated one game.');
-
-                    break;
-                }
-                case SeasonStartFormType::START_SEASON: {
-                    if(count($serverService->getCurrentServer()->getTeams()) <= 1) {
-                        $this->addFlash('warning', 'To start season, you have to create two teams.');
-
-                        return $this->redirectToRoute('admin_season');
-                    }
-
-                    if(!$seasonService->teamsHaveCoach($server)) {
-                        $this->addFlash('warning', 'There is teams that doesn\'t have coach.');
-
-                        return $this->redirectToRoute('admin_season');
-                    }
-
-                    $messageBus->dispatch(new StartSeason($server->getId(), $season->getId()));
-                    $this->addFlash('success', 'You successfully started season.');
-
-                    break;
-                }
-                default: {
-                    $this->addFlash('warning', 'Action was not found.');
-
-                    break;
-                }
-            }
+            list($key, $message) = $seasonManagementService->dispatchChoosenActionAndReturnMessage($status, $season);
+            $this->addFlash($key, $message);
 
             return $this->redirectToRoute('admin_season');
         }
@@ -736,9 +693,9 @@ class AdminController extends BaseController
     /**
      * @Route("/training-camps", name="list_training_camp", methods={"GET"})
      *
-     * @param Request $request
+     * @param Request                $request
      * @param TrainingCampRepository $trainingCampRepository
-     * @param PaginatorInterface $paginator
+     * @param PaginatorInterface     $paginator
      *
      * @return Response
      */
@@ -770,7 +727,7 @@ class AdminController extends BaseController
     /**
      * @Route("/delete-training-camp/{id}", name="delete_training_camp")
      *
-     * @param int $id
+     * @param int                    $id
      * @param TrainingCampRepository $trainingCampRepository
      *
      * @return Response
@@ -805,8 +762,8 @@ class AdminController extends BaseController
     /**
      * @Route("/users", name="list_user", methods={"GET"})
      *
-     * @param Request $request
-     * @param UserRepository $userRepository
+     * @param Request            $request
+     * @param UserRepository     $userRepository
      * @param PaginatorInterface $paginator
      *
      * @return Response
@@ -837,7 +794,7 @@ class AdminController extends BaseController
     /**
      * @Route("/set-rewards", name="set_user_rewards", methods={"GET", "POST"})
      *
-     * @param Request $request
+     * @param Request       $request
      * @param ServerService $serverService
      * @param SeasonService $seasonService
      *
@@ -890,7 +847,7 @@ class AdminController extends BaseController
     /**
      * @Route("/change-coach", name="admin_change_coach", methods={"GET", "POST"})
      *
-     * @param Request $request
+     * @param Request         $request
      * @param CoachRepository $coachRepository
      *
      * @return Response

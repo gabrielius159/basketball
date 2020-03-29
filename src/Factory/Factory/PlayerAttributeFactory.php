@@ -24,11 +24,13 @@ class PlayerAttributeFactory
     }
 
     /**
-     * @param array $attributes
+     * @param array  $attributes
      * @param Player $player
-     * @param bool $userPlayer
+     * @param bool   $userPlayer
      *
      * @return array
+     *
+     * @throws \Exception
      */
     public function create(array $attributes, Player $player, bool $userPlayer = false): array
     {

@@ -32,3 +32,4 @@ yarn-error.log
 
 /public/images/players
 /public/images/teams
+/public/build/*

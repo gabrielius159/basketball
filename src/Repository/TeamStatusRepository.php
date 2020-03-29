@@ -35,19 +35,6 @@ class TeamStatusRepository extends ServiceEntityRepository
      */
     public function getStandingsList(Season $season)
     {
-        //return $this->getStandingsListTest($season);
-        return $this->createQueryBuilder('ts')
-            ->where('ts.season = :season')
-            ->orderBy('ts.win', 'DESC')
-            ->addOrderBy('ts.lose', 'ASC')
-            ->setParameter('season', $season)
-            ->getQuery()
-            ->getResult()
-            ;
-    }
-
-    public function getStandingsListTest(Season $season)
-    {
         return $this->createQueryBuilder('ts')
             ->where('ts.season = :season')
             ->orderBy('ts.win', 'DESC')

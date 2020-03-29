@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Player;
+use App\Event\CreateNewPlayerPlayerStatsEvent;
+use App\Event\SetPlayerAttributesForNewPlayerEvent;
 use App\Form\PlayerFormType;
 use App\Repository\PlayerRepository;
 use App\Security\Voter\PlayerVoter;
@@ -15,6 +17,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class PlayerController
@@ -29,24 +32,23 @@ class PlayerController extends BaseController
     /**
      * @Route("/new", name="new_player", methods={"GET", "POST"})
      *
-     * @param Request $request
-     * @param PlayerStatsService $playerStatsService
-     * @param AttributeService $attributeService
-     * @param PlayerService $playerService
+     * @param Request                  $request
+     * @param PlayerStatsService       $playerStatsService
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param PlayerService            $playerService
      *
      * @return Response
-     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function new(
         Request $request,
         PlayerStatsService $playerStatsService,
-        AttributeService $attributeService,
+        EventDispatcherInterface $eventDispatcher,
         PlayerService $playerService
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        if($this->getUser()->getPlayer()) {
+        if($this->getUser()->getPlayer() instanceof Player) {
             $this->addFlash('warning', 'You already have player!');
 
             return $this->redirectToRoute('home');
@@ -61,19 +63,22 @@ class PlayerController extends BaseController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
-
             $em = $this->getDoctrine()->getManager();
 
             $em->persist($player);
             $em->flush();
 
-            $playerStatsService->createPlayerStatsOnPlayerCreate($player);
-            $attributeService->createAttributesForPlayer($player);
+            $event = new CreateNewPlayerPlayerStatsEvent($player);
+            $eventDispatcher->dispatch($event, CreateNewPlayerPlayerStatsEvent::NAME);
+
+            $event = new SetPlayerAttributesForNewPlayerEvent($player);
+            $eventDispatcher->dispatch($event, SetPlayerAttributesForNewPlayerEvent::NAME);
+
             [$teamName, $draftPick] = $playerService->draftPlayer($player);
 
-            if($draftPick[0] > 0) {
-                $this->addFlash('draftPick', $draftPick[0]);
-                $this->addFlash('teamName', $teamName[0]);
+            if($draftPick !== 0) {
+                $this->addFlash('draftPick', $draftPick);
+                $this->addFlash('teamName', $teamName);
                 $this->addFlash('success', 'Player created successfully.');
             } else {
                 $this->addFlash('warning', 'Sorry to say, but no team was interested in you, you are a free agent.');
@@ -155,6 +160,7 @@ class PlayerController extends BaseController
         PlayerStatsService $playerStatsService
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         if(!$this->getUser()->getPlayer()) {
             $this->addFlash(
                 'warning',

@@ -15,6 +15,12 @@ class Season
     const STATUS_PREPARING = 'PREPARING';
     const STATUS_FINISHED = 'FINISHED';
 
+    const STATUS_NAME = [
+        self::STATUS_ACTIVE => 'In progress',
+        self::STATUS_PREPARING => 'Preseason',
+        self::STATUS_FINISHED => 'Finished'
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

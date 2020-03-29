@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -131,11 +131,19 @@ class TeamStatus
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getPoints(): ?int
     {
         return $this->points;
     }
 
+    /**
+     * @param int $points
+     *
+     * @return TeamStatus
+     */
     public function setPoints(int $points): self
     {
         $this->points = $points;
