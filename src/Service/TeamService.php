@@ -47,6 +47,8 @@ class TeamService
      */
     private $gameDayRepository;
 
+    private $fakePlayerService;
+
     /**
      * TeamService constructor.
      *
@@ -61,13 +63,15 @@ class TeamService
         SeasonService $seasonService,
         TeamStatusRepository $teamStatusRepository,
         PlayerService $playerService,
-        GameDayRepository $gameDayRepository
+        GameDayRepository $gameDayRepository,
+        FakePlayerService $fakePlayerService
     ) {
-        $this->entityManager = $entityManager;
-        $this->seasonService = $seasonService;
+        $this->entityManager        = $entityManager;
+        $this->seasonService        = $seasonService;
         $this->teamStatusRepository = $teamStatusRepository;
-        $this->playerService = $playerService;
-        $this->gameDayRepository = $gameDayRepository;
+        $this->playerService        = $playerService;
+        $this->gameDayRepository    = $gameDayRepository;
+        $this->fakePlayerService    = $fakePlayerService;
     }
 
     /**
@@ -75,82 +79,58 @@ class TeamService
      *
      * @return Team|null
      */
-    public function findOneById(int $id)
+    public function findOneById(int $id): ?Team
     {
-        /**
-         * @var Team $team
-         */
-        $team = $this->entityManager->getRepository(Team::class)->find($id);
-
-        return $team;
+        return $this->entityManager->getRepository(Team::class)->find($id);
     }
 
     /**
      * @param Team $team
      */
-    public function deleteTeam(Team $team)
+    public function deleteTeam(Team $team): void
     {
-        /**
-         * Get all players that are in the team
-         *
-         * @var Player[] $players
-         */
         $players = $this->entityManager->getRepository(Player::class)
             ->findBy([
                 'team' => $team,
                 'server' => $team->getServer()
-            ]);
+            ]
+        );
+        $coach = $team->getCoach();
+        $gameDays = $this->gameDayRepository->getTeamGameDays($team);
+        $countOfPlayersOnTheTeam = count($players);
 
-        if($playerNumber = count($players) > 0) {
-            $numberOfChunks = intval(ceil($playerNumber / 1000));
+        if ($countOfPlayersOnTheTeam !== 0) {
+            $numberOfChunks = intval(ceil($countOfPlayersOnTheTeam / 1000));
             $chunks = array_chunk($players, $numberOfChunks);
 
             foreach($chunks as $chunk) {
-                /**
-                 * @var Player $player
-                 */
                 foreach($chunk as $player) {
-                    self::resetPlayerTeam($player);
+                    $this->resetPlayerTeam($player);
                     $this->entityManager->persist($player);
                 }
 
                 $this->entityManager->flush();
             }
+
+            foreach($players as $fakePlayer) {
+                if($fakePlayer->getIsRealPlayer() === false) {
+                    $this->entityManager->remove($fakePlayer);
+                    $this->entityManager->flush();
+                }
+            }
         }
 
-        /**
-         * Remove all fake player that were in the team
-         *
-         * @var Player $fakePlayer
-         */
-        foreach($players as $fakePlayer) {
-            if($fakePlayer->getIsRealPlayer() === false) {
-                $this->entityManager->remove($fakePlayer);
+        if (count($gameDays) !== 0) {
+            foreach($gameDays as $gameDay) {
+                $gameDay->setTeamOne(null);
+                $gameDay->setTeamTwo(null);
+
+                $this->entityManager->remove($gameDay);
                 $this->entityManager->flush();
             }
         }
 
-        /**
-         * @var GameDay[] $gameDays
-         */
-        $gameDays = $this->gameDayRepository->getTeamGameDays($team);
-
-        foreach($gameDays as $gameDay) {
-            $gameDay->setTeamOne(null);
-            $gameDay->setTeamTwo(null);
-
-            $this->entityManager->remove($gameDay);
-            $this->entityManager->flush();
-        }
-
-        /**
-         * Set Coach free agent
-         *
-         * @var Coach $coach
-         */
-        $coach = $team->getCoach();
-
-        if($coach) {
+        if($coach instanceof Coach) {
             $coach->setTeam(null);
 
             $this->entityManager->persist($coach);
@@ -188,8 +168,8 @@ class TeamService
      */
     public function buyoutPlayerFromTeam(Player $player)
     {
-        $this->seasonService->createFakePlayer($player->getTeam(), $player->getPosition()->getName());
-        self::resetPlayerTeam($player);
+        $this->fakePlayerService->createFakePlayer($player->getTeam(), $player->getPosition()->getName());
+        $this->resetPlayerTeam($player);
 
         $this->entityManager->persist($player);
         $this->entityManager->flush();
@@ -205,16 +185,19 @@ class TeamService
      */
     public function signPlayerToTeam(Player $player, Team $team, float $salary = 0, int $years = 2)
     {
-        self::checkAndFixFakePlayerLimitOnSigning($team, $player);
+        $this->checkAndFixFakePlayerLimitOnSigning($team, $player);
 
         $player->setTeam($team);
         $player->setContractYears($years);
         $player->setContractSalary($salary);
-        $player->setSeasonEndsContract($this->seasonService->getActiveSeason($player->getServer())->getId() + $years);
-        $this->playerService->setPlayerJerseyNumber($team, $player, false);
+        $player->setSeasonEndsContract(
+            $this->seasonService->getActiveSeason($player->getServer())->getId() + $years
+        );
 
         $this->entityManager->persist($player);
         $this->entityManager->flush();
+
+        $this->playerService->setPlayerJerseyNumber($team, $player);
     }
 
     /**
@@ -226,8 +209,16 @@ class TeamService
         if(count($team->getPlayers()) > 9) {
             $fakePlayer = $team->getFakePlayerSamePosition($realPlayer->getPosition())->first();
 
-            $this->entityManager->remove($fakePlayer);
-            $this->entityManager->flush();
+            if (!$fakePlayer instanceof Player) {
+                $fakePlayer = $team->getPlayers()->filter(function (Player $player) {
+                    return $player->getIsRealPlayer() === false;
+                })->first();
+            }
+
+            if ($fakePlayer instanceof Player) {
+                $this->entityManager->remove($fakePlayer);
+                $this->entityManager->flush();
+            }
         }
     }
 

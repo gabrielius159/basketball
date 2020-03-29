@@ -2,8 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Attribute;
-use App\Entity\Country;
 use App\Entity\GameDay;
 use App\Entity\GameDayScores;
 use App\Entity\GameType;
@@ -12,7 +10,6 @@ use App\Entity\PlayerAttribute;
 use App\Entity\PlayerAward;
 use App\Entity\PlayerBadge;
 use App\Entity\PlayerStats;
-use App\Entity\Position;
 use App\Entity\Season;
 use App\Entity\Server;
 use App\Entity\Team;
@@ -70,11 +67,6 @@ class SeasonService
     private $playerRepository;
 
     /**
-     * @var AttributeService
-     */
-    private $attributeService;
-
-    /**
      * @var TeamStatusRepository
      */
     private $teamStatusRepository;
@@ -94,7 +86,6 @@ class SeasonService
      * @param EntityManagerInterface   $entityManager
      * @param GameDayRepository        $gameDayRepository
      * @param PlayerRepository         $playerRepository
-     * @param AttributeService         $attributeService
      * @param TeamStatusRepository     $teamStatusRepository
      * @param EventDispatcherInterface $eventDispatcher
      */
@@ -104,7 +95,6 @@ class SeasonService
         EntityManagerInterface $entityManager,
         GameDayRepository $gameDayRepository,
         PlayerRepository $playerRepository,
-        AttributeService $attributeService,
         TeamStatusRepository $teamStatusRepository,
         EventDispatcherInterface $eventDispatcher,
         TeamRepository $teamRepository
@@ -114,10 +104,10 @@ class SeasonService
         $this->entityManager = $entityManager;
         $this->gameDayRepository = $gameDayRepository;
         $this->playerRepository = $playerRepository;
-        $this->attributeService = $attributeService;
         $this->teamStatusRepository = $teamStatusRepository;
         $this->eventDispatcher = $eventDispatcher;
         $this->teamRepository = $teamRepository;
+        $this->faker = Factory::create();
     }
 
     /**
@@ -132,7 +122,7 @@ class SeasonService
         $season = $this->seasonRepository->getActiveSeason($server);
 
         if(!$season instanceof Season) {
-            $season = self::createAndReturnNewSeason($server);
+            $season = $this->createAndReturnNewSeason($server);
         }
 
         return $season;
@@ -156,7 +146,7 @@ class SeasonService
             $this->entityManager->persist($newSeason);
             $this->entityManager->flush();
 
-            self::createNewEntities($newSeason);
+            $this->createNewEntities($newSeason);
         }
     }
 
@@ -184,9 +174,9 @@ class SeasonService
      */
     public function getSeasonLeadersArray(Server $server): array
     {
-        $season = self::getActiveSeason($server);
+        $season = $this->getActiveSeason($server);
 
-        if($season) {
+        if($season instanceof Season) {
             return [
                 'points' => $this->playerStatsRepository->getLeadersByCategory($season, PlayerStats::CATEGORY_POINTS),
                 'rebounds' => $this->playerStatsRepository->getLeadersByCategory($season, PlayerStats::CATEGORY_REBOUNDS),
@@ -299,7 +289,7 @@ class SeasonService
     {
         $team = $this->entityManager->getRepository(Team::class)->find($teamId);
 
-        if($team) {
+        if($team instanceof Team) {
             switch($type) {
                 case 'ASSISTS': {
                     $value = 0;
@@ -951,9 +941,6 @@ class SeasonService
     {
         $data = [];
 
-        /**
-         * @var PlayerScore $playerScore
-         */
         foreach($playerScores as $playerScore) {
             $player = [
                 'points' => $playerScore->getPoints(),
@@ -979,11 +966,7 @@ class SeasonService
      */
     public function getTodayGame(Server $server): ?GameDay
     {
-        $season = $this->getActiveSeason($server);
-
-        $today = $this->gameDayRepository->getByDate(new \DateTime(), $season);
-
-        return $today;
+        return $this->gameDayRepository->getByDate(new \DateTime(), $this->getActiveSeason($server));
     }
 
     /**
@@ -995,11 +978,9 @@ class SeasonService
      */
     public function getTwoUpcomingGames(Server $server)
     {
-        $season = $this->getActiveSeason($server);
+        $games = $this->gameDayRepository->getTwoUpcomingGames($this->getActiveSeason($server));
 
-        $games = $this->gameDayRepository->getTwoUpcomingGames($season);
-
-        if(!$games) {
+        if (count($games) === 0) {
             return [];
         }
 
@@ -1009,269 +990,9 @@ class SeasonService
     /**
      * @param Server $server
      *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function generateFakePlayers(Server $server)
-    {
-        $teams = $this->entityManager->getRepository(Team::class)->findBy([
-            'server' => $server
-        ]);
-
-        /**
-         * @var Team $team
-         */
-        foreach($teams as $team) {
-            $teamPlayers = $team->getPlayers();
-
-            $pg = $teamPlayers->filter(function (Player $player) {
-                return $player->getPosition()->getName() === Position::POINT_GUARD;
-            });
-
-            $sg = $teamPlayers->filter(function (Player $player) {
-                return $player->getPosition()->getName() === Position::SHOOTING_GUARD;
-            });
-
-            $sf = $teamPlayers->filter(function (Player $player) {
-                return $player->getPosition()->getName() === Position::SMALL_FORWARD;
-            });
-
-            $pf = $teamPlayers->filter(function (Player $player) {
-                return $player->getPosition()->getName() === Position::POWER_FORWARD;
-            });
-
-            $c = $teamPlayers->filter(function (Player $player) {
-                return $player->getPosition()->getName() === Position::CENTER;
-            });
-
-            if($pg) {
-                self::createFakePlayer($team, Position::POINT_GUARD, (2 - count($pg)));
-            }
-
-            if($sg) {
-                self::createFakePlayer($team, Position::SHOOTING_GUARD, (2 - count($sg)));
-            }
-
-            if($sf) {
-
-                self::createFakePlayer($team, Position::SMALL_FORWARD, (2 - count($sf)));
-            }
-
-            if($pf) {
-                self::createFakePlayer($team, Position::POWER_FORWARD, (2 - count($pf)));
-            }
-
-            if($c) {
-                self::createFakePlayer($team, Position::CENTER, (2 - count($c)));
-            }
-        }
-    }
-
-    /**
-     * @param Team $team
-     * @param string $position
-     * @param int $iterations
-     *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function createFakePlayer(Team $team, string $position, int $iterations = 1)
-    {
-        $this->faker = Factory::create();
-
-        $minHeight = 150;
-        $maxHeight = 220;
-        $minWeight = 60;
-        $maxWeight = 150;
-
-        switch ($position) {
-            case Position::POINT_GUARD: {
-                $minHeight = 170;
-                $maxHeight = 190;
-                $minWeight = 60;
-                $maxWeight = 80;
-
-                break;
-            }
-            case Position::SHOOTING_GUARD: {
-                $minHeight = 188;
-                $maxHeight = 201;
-                $minWeight = 60;
-                $maxWeight = 80;
-
-                break;
-            }
-            case Position::SMALL_FORWARD: {
-                $minHeight = 198;
-                $maxHeight = 206;
-                $minWeight = 80;
-                $maxWeight = 100;
-
-                break;
-            }
-            case Position::POWER_FORWARD: {
-                $minHeight = 201;
-                $maxHeight = 213;
-                $minWeight = 80;
-                $maxWeight = 110;
-
-                break;
-            }
-            case Position::CENTER: {
-                $minHeight = 203;
-                $maxHeight = 216;
-                $minWeight = 90;
-                $maxWeight = 120;
-
-                break;
-            }
-        }
-
-        for($i = 0; $i < $iterations; $i++) {
-            /**
-             * @var Country $country
-             */
-            $country = $this->entityManager
-                ->getRepository(Country::class)
-                ->find(rand(1, 249));
-
-            /**
-             * @var Position $playerPosition
-             */
-            $playerPosition = $this->entityManager
-                ->getRepository(Position::class)
-                ->findOneBy([
-                    'name' => $position
-                ]);
-
-            $validGameTypes = [
-                GameType::TYPE_SCORING,
-                GameType::TYPE_ASSISTING,
-                GameType::TYPE_REBOUNDING,
-                GameType::TYPE_STEALING,
-                GameType::TYPE_BLOCKING
-            ];
-
-            /**
-             * @var GameType $firstGameType
-             */
-            $firstGameType = $this->entityManager
-                ->getRepository(GameType::class)
-                ->findOneBy(['type' => $validGameTypes[rand(0, 4)]]);
-
-            /**
-             * @var GameType $secondGameType
-             */
-            $secondGameType = $this->entityManager
-                ->getRepository(GameType::class)
-                ->findOneBy(['type' => $validGameTypes[rand(0, 4)]]);
-
-            $fakePlayer = (new Player())
-                ->setServer($team->getServer())
-                ->setTeam($team)
-                ->setIsRealPlayer(false)
-                ->setContractSalary(PlayerService::DRAFT_PICK_SALARY_A_GAME)
-                ->setContractYears(rand(1, 4))
-                ->setUser(null)
-                ->setHeight(rand($minHeight, $maxHeight))
-                ->setWeight(rand($minWeight, $maxWeight))
-                ->setBorn($this->faker->dateTimeBetween('-30 years', '-18 years'))
-                ->setCountry($country)
-                ->setFirstname($this->faker->firstNameMale())
-                ->setLastname($this->faker->lastName())
-                ->setPosition($playerPosition)
-                ->setFirstType($firstGameType)
-                ->setMoney(0)
-                ->setSecondType($secondGameType);
-
-            self::setFakePlayerJerseyNumber($team, $fakePlayer);
-
-            $this->entityManager->persist($fakePlayer);
-            $this->entityManager->flush();
-
-            self::createFakePlayerStatsOnPlayerCreate($fakePlayer);
-            self::createFakePlayerAttributes($fakePlayer);
-        }
-    }
-
-    /**
-     * @param Team $team
-     * @param Player $player
-     * @param bool $flush
-     */
-    public function setFakePlayerJerseyNumber(Team $team, Player $player, bool $flush = true)
-    {
-        /**
-         * @var array $usedJerseys
-         */
-        $usedJerseys[] = $this->playerRepository->getTakenJerseyNumbers($team);
-        $jerseyNumber = null;
-
-        while($jerseyNumber == null) {
-            $generatedNumber = rand(0, 99);
-            if(!in_array($generatedNumber, $usedJerseys)) {
-                $jerseyNumber = $generatedNumber;
-            }
-        }
-
-        $player->setJerseyNumber($jerseyNumber);
-
-        if($flush) {
-            $this->entityManager->persist($player);
-            $this->entityManager->flush();
-        }
-    }
-
-    /**
-     * @param Player $player
-     *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function createFakePlayerStatsOnPlayerCreate(Player $player)
-    {
-        if(self::checkIfActiveSeasonExists($player->getServer())) {
-            $playerStats = new PlayerStats();
-
-            $playerStats->setGamesPlayed(0);
-            $playerStats->setAssists(0);
-            $playerStats->setBlocks(0);
-            $playerStats->setPlayer($player);
-            $playerStats->setPoints(0);
-            $playerStats->setRebounds(0);
-            $playerStats->setSteals(0);
-            $playerStats->setSeason(self::getActiveSeason($player->getServer()));
-
-            $this->entityManager->persist($playerStats);
-            $this->entityManager->flush();
-        } else {
-            self::createNewSeasonWithoutReturn($player->getServer());
-        }
-    }
-
-    public function createFakePlayerAttributes(Player $player)
-    {
-        $attributeRepository = $this->entityManager->getRepository(Attribute::class);
-        $attributes = $attributeRepository->findAll();
-
-        /**
-         * @var Attribute $attribute
-         */
-        foreach($attributes as $attribute) {
-            $playerAttribute = (new PlayerAttribute())
-                ->setValue($this->faker->numberBetween(25, $this->faker->numberBetween(25, 40)))
-                ->setAttribute($attribute)
-                ->setPlayer($player);
-
-            $this->entityManager->persist($playerAttribute);
-            $this->entityManager->flush();
-        }
-    }
-
-
-    /**
-     * @param Server $server
-     *
      * @return Season
      */
-    private function createAndReturnNewSeason(Server $server)
+    private function createAndReturnNewSeason(Server $server): Season
     {
         $newSeason = (new Season())
             ->setStatus(Season::STATUS_PREPARING)
@@ -1281,7 +1002,7 @@ class SeasonService
         $this->entityManager->persist($newSeason);
         $this->entityManager->flush();
 
-        self::createNewEntities($newSeason);
+        $this->createNewEntities($newSeason);
 
         return $newSeason;
     }

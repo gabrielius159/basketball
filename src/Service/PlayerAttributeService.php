@@ -7,22 +7,12 @@ use App\Factory\Factory\PlayerAttributeFactory;
 use App\Repository\PlayerAttributeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\PlayerAttribute AS PlayerAttributeEntity;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PlayerAttributeService
 {
-    /**
-     * @var PlayerAttributeRepository
-     */
     private $playerAttributeRepository;
-
-    /**
-     * @var PlayerAttributeFactory
-     */
     private $playerAttributeFactory;
-
-    /**
-     * @var EntityManagerInterface
-     */
     private $entityManager;
 
     /**
@@ -38,15 +28,17 @@ class PlayerAttributeService
         EntityManagerInterface $entityManager
     ) {
         $this->playerAttributeRepository = $playerAttributeRepository;
-        $this->playerAttributeFactory = $playerAttributeFactory;
-        $this->entityManager = $entityManager;
+        $this->playerAttributeFactory    = $playerAttributeFactory;
+        $this->entityManager             = $entityManager;
     }
 
     /**
-     * @param int $playerId
+     * @param int  $playerId
      * @param bool $userPlayer
      *
      * @return array|null
+     *
+     * @throws \Exception
      */
     public function getPlayerPlayerAttributes(int $playerId, bool $userPlayer = false): ?array
     {
@@ -75,17 +67,15 @@ class PlayerAttributeService
     {
         $player = $playerAttribute->getPlayer();
 
-        /**
-         * Improve PlayerAttribute
-         */
         $playerAttribute->setValue($playerAttribute->getValue() + 1);
 
         $this->entityManager->persist($playerAttribute);
         $this->entityManager->flush();
 
-        /**
-         * Take money
-         */
+        if($playerAttribute->getValue() > 99) {
+            $this->fixPlayerPlayerAttributeValue($playerAttribute);
+        }
+
         $player->setMoney($player->getMoney() - $price);
 
         $this->entityManager->persist($player);

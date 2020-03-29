@@ -4,6 +4,7 @@ namespace App\MessageHandler;
 
 use App\Entity\Season;
 use App\Entity\Server;
+use App\Event\GenerateFakePlayersEvent;
 use App\Event\GenerateScheduleEvent;
 use App\Message\StartSeason;
 use App\Service\SeasonService;
@@ -54,7 +55,8 @@ class StartSeasonHandler implements MessageHandlerInterface
         $server = $this->entityManager->getRepository(Server::class)->find($message->getServerId());
         $season = $this->entityManager->getRepository(Season::class)->find($message->getSeasonId());
 
-        $this->seasonService->generateFakePlayers($server);
+        $event = new GenerateFakePlayersEvent($server);
+        $this->eventDispatcher->dispatch($event, GenerateFakePlayersEvent::NAME);
 
         $event = new GenerateScheduleEvent($season);
         $this->eventDispatcher->dispatch($event, GenerateScheduleEvent::NAME);

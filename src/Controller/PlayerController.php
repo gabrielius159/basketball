@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Player;
+use App\Event\CreateNewPlayerPlayerStatsEvent;
 use App\Event\SetPlayerAttributesForNewPlayerEvent;
 use App\Form\PlayerFormType;
 use App\Repository\PlayerRepository;
@@ -67,16 +68,17 @@ class PlayerController extends BaseController
             $em->persist($player);
             $em->flush();
 
-            $playerStatsService->createPlayerStatsOnPlayerCreate($player);
+            $event = new CreateNewPlayerPlayerStatsEvent($player);
+            $eventDispatcher->dispatch($event, CreateNewPlayerPlayerStatsEvent::NAME);
 
             $event = new SetPlayerAttributesForNewPlayerEvent($player);
             $eventDispatcher->dispatch($event, SetPlayerAttributesForNewPlayerEvent::NAME);
 
             [$teamName, $draftPick] = $playerService->draftPlayer($player);
 
-            if($draftPick[0] > 0) {
-                $this->addFlash('draftPick', $draftPick[0]);
-                $this->addFlash('teamName', $teamName[0]);
+            if($draftPick !== 0) {
+                $this->addFlash('draftPick', $draftPick);
+                $this->addFlash('teamName', $teamName);
                 $this->addFlash('success', 'Player created successfully.');
             } else {
                 $this->addFlash('warning', 'Sorry to say, but no team was interested in you, you are a free agent.');

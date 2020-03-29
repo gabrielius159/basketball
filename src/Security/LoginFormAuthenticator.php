@@ -51,9 +51,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     /**
      * LoginFormAuthenticator constructor.
      *
-     * @param EntityManagerInterface $entityManager
-     * @param UrlGeneratorInterface $urlGenerator
-     * @param CsrfTokenManagerInterface $csrfTokenManager
+     * @param EntityManagerInterface       $entityManager
+     * @param UrlGeneratorInterface        $urlGenerator
+     * @param CsrfTokenManagerInterface    $csrfTokenManager
      * @param UserPasswordEncoderInterface $passwordEncoder
      */
     public function __construct(
@@ -62,10 +62,10 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         CsrfTokenManagerInterface $csrfTokenManager,
         UserPasswordEncoderInterface $passwordEncoder
     ) {
-        $this->entityManager = $entityManager;
-        $this->urlGenerator = $urlGenerator;
+        $this->entityManager    = $entityManager;
+        $this->urlGenerator     = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordEncoder  = $passwordEncoder;
     }
 
     /**
@@ -101,7 +101,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * @param mixed $credentials
+     * @param mixed                 $credentials
      * @param UserProviderInterface $userProvider
      *
      * @return object|UserInterface|null
@@ -125,7 +125,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * @param mixed $credentials
+     * @param mixed         $credentials
      * @param UserInterface $user
      *
      * @return bool
@@ -137,9 +137,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * @param Request $request
+     * @param Request        $request
      * @param TokenInterface $token
-     * @param string $providerKey
+     * @param string         $providerKey
      *
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response|null
      */

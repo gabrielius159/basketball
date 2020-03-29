@@ -74,4 +74,48 @@ class TeamRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * @param Server $server
+     *
+     * @return array
+     */
+    public function findAllTeamIdsByServer(Server $server): array
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t.id')
+            ->where('t.server = :server')
+            ->setParameter('server', $server)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * @param Server $server
+     * @param Team   $team
+     * @param string $position
+     *
+     * @return int
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findCountOfPositionByServerAndTeamId(Server $server, Team $team, string $position): int
+    {
+        $parameters = [
+            'server' => $server,
+            'team' => $team->getId(),
+            'position' => $position
+        ];
+
+        return $this->createQueryBuilder('t')
+            ->select('COUNT(p.id)')
+            ->leftJoin('t.players', 'p')
+            ->leftJoin('p.position', 'pp')
+            ->where('t.server = :server')
+            ->andWhere('t.id = :team')
+            ->andWhere('pp.name = :position')
+            ->setParameters($parameters)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

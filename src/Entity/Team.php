@@ -293,7 +293,7 @@ class Team
     public function getFakePlayerSamePosition(Position $position): Collection
     {
         return $this->getPlayers()->filter(function(Player $player) use ($position) {
-            return $player->getPosition() == $position && $player->getIsRealPlayer() == false;
+            return $player->getPosition() === $position && $player->getIsRealPlayer() == false;
         });
     }
 
@@ -529,5 +529,13 @@ class Team
         }
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullTeamName(): string
+    {
+        return $this->getCity().' '.$this->getName();
     }
 }

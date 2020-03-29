@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Service;
 
@@ -8,99 +8,18 @@ use App\Entity\Season;
 use App\Repository\PlayerStatsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * Class PlayerStatsService
- *
- * @package App\Service
- */
 class PlayerStatsService
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var SeasonService
-     */
-    private $seasonService;
-
-    /**
-     * @var PlayerStatsRepository
-     */
     private $playerStatsRepository;
 
     /**
      * PlayerStatsService constructor.
      *
-     * @param EntityManagerInterface $entityManager
-     * @param SeasonService $seasonService
      * @param PlayerStatsRepository $playerStatsRepository
      */
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        SeasonService $seasonService,
-        PlayerStatsRepository $playerStatsRepository
-    ) {
-        $this->entityManager = $entityManager;
-        $this->seasonService = $seasonService;
+    public function __construct(PlayerStatsRepository $playerStatsRepository)
+    {
         $this->playerStatsRepository = $playerStatsRepository;
-    }
-
-    /**
-     * @param Player $player
-     *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function createPlayerStatsOnPlayerCreate(Player $player)
-    {
-        if($this->seasonService->checkIfActiveSeasonExists($player->getServer())) {
-            $playerStats = new PlayerStats();
-
-            $playerStats->setGamesPlayed(0);
-            $playerStats->setAssists(0);
-            $playerStats->setBlocks(0);
-            $playerStats->setPlayer($player);
-            $playerStats->setPoints(0);
-            $playerStats->setRebounds(0);
-            $playerStats->setSteals(0);
-            $playerStats->setSeason($this->seasonService->getActiveSeason($player->getServer()));
-
-            $this->entityManager->persist($playerStats);
-            $this->entityManager->flush();
-        } else {
-            $this->seasonService->createNewSeasonWithoutReturn($player->getServer());
-        }
-    }
-
-    /**
-     * @param Player $player
-     * @param Season $season
-     *
-     * @return PlayerStats
-     *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function getPlayerStatsBySeason(Player $player, Season $season): PlayerStats
-    {
-        /**
-         * @var PlayerStats $playerStats
-         */
-        $playerStats = $this->entityManager->getRepository(PlayerStats::class)->findOneBy([
-           'season' => $season,
-           'player' => $player
-        ]);
-
-        if(!$playerStats instanceof PlayerStats) {
-            self::createPlayerStatsOnPlayerCreate($player);
-
-            $playerStats = $this->entityManager->getRepository(PlayerStats::class)->findOneBy([
-                'season' => $season,
-                'player' => $player
-            ]);
-        }
-
-        return $playerStats;
     }
 
     /**

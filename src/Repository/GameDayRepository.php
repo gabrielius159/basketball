@@ -36,13 +36,12 @@ class GameDayRepository extends ServiceEntityRepository
      *
      * @throws \Exception
      */
-    public function getByDate(\Datetime $date, Season $season)
+    public function getByDate(\Datetime $date, Season $season): ?GameDay
     {
         $from = new \DateTime($date->format("Y-m-d")." 00:00:00");
         $to   = new \DateTime($date->format("Y-m-d")." 23:59:59");
 
-        $qb = $this->createQueryBuilder("gd");
-        $qb
+        return $this->createQueryBuilder('gd')
             ->where('gd.time BETWEEN :from AND :to')
             ->andWhere('gd.season = :season')
             ->andWhere('gd.status != :status')
@@ -53,11 +52,8 @@ class GameDayRepository extends ServiceEntityRepository
                 'status' => Season::STATUS_FINISHED
             ])
             ->setMaxResults(1)
-        ;
-
-        $result = $qb->getQuery()->getOneOrNullResult();
-
-        return $result;
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**

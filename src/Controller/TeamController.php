@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Badge;
 use App\Entity\GameDay;
 use App\Entity\Player;
 use App\Entity\Team;
+use App\Event\CreateBadgeForPlayerEvent;
 use App\Form\BuyoutFormType;
 use App\Form\PlayerSignContractFormType;
 use App\Repository\GameDayRepository;
@@ -23,6 +25,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class TeamController
@@ -330,20 +333,19 @@ class TeamController extends BaseController
     /**
      * @Route("/join-training-camp/{id}", name="join_training_camp", methods={"GET"})
      *
-     * @param PlayerService $playerService
-     * @param int $id
-     * @param TrainingCampRepository $trainingCampRepository
-     * @param BadgeService $badgeService
+     * @param PlayerService            $playerService
+     * @param int                      $id
+     * @param TrainingCampRepository   $trainingCampRepository
+     * @param EventDispatcherInterface $eventDispatcher
      *
      * @return Response
-     *
      * @throws \Exception
      */
     public function joinCamp(
         PlayerService $playerService,
         int $id,
         TrainingCampRepository $trainingCampRepository,
-        BadgeService $badgeService
+        EventDispatcherInterface $eventDispatcher
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted(PlayerVoter::HAS_PLAYER);
@@ -381,8 +383,9 @@ class TeamController extends BaseController
 
         $playerService->improvePlayerAttribute($trainingCamp, $player);
 
-        if($trainingCamp->getBadge()) {
-            $badgeService->createBadgeForPlayer($player, $trainingCamp->getBadge());
+        if ($trainingCamp->getBadge() instanceof Badge) {
+            $event = new CreateBadgeForPlayerEvent($player, $trainingCamp->getBadge());
+            $eventDispatcher->dispatch($event, CreateBadgeForPlayerEvent::NAME);
         }
 
         $this->addFlash('success', 'You joined ' . $trainingCamp->getName() . '.');
@@ -411,7 +414,7 @@ class TeamController extends BaseController
             return $this->redirectToRoute('team_schedule');
         }
 
-        if($gameDay->getStatus() != GameDay::STATUS_FINISHED) {
+        if($gameDay->getStatus() !== GameDay::STATUS_FINISHED) {
             $this->addFlash('warning', 'Game did not finished or started.');
 
             return $this->redirectToRoute('team_schedule');

@@ -73,32 +73,29 @@ class PlayerAttribute
     /**
      * @param Player $player
      * @param string $attributeGameTypeName
-     * @param float $attributeValue
+     * @param float  $attributeValue
      *
      * @return float
+     *
+     * @throws \Exception
      */
-    public function getPlayerAttributeImprovePrice(Player $player, string $attributeGameTypeName, float $attributeValue): float
-    {
-        $price = 0.0;
-
+    public function getPlayerAttributeImprovePrice(
+        Player $player,
+        string $attributeGameTypeName,
+        float $attributeValue
+    ): float {
         switch($attributeGameTypeName) {
             case $player->getFirstType()->getName(): {
-                $price = self::CHEAPEST_GYM_VALUE * $attributeValue;
-
-                break;
+                return self::CHEAPEST_GYM_VALUE * $attributeValue;
             }
             case $player->getSecondType()->getName(): {
-                $price = self::CHEAPER_GYM_TYPE * $attributeValue;
-
-                break;
+                return self::CHEAPER_GYM_TYPE * $attributeValue;
             }
             default: {
-                $price = self::DEFAULT_GYM_VALUE * $attributeValue;
-
-                break;
+                return self::DEFAULT_GYM_VALUE * $attributeValue;
             }
         }
 
-        return $price;
+        throw new \Exception('Unknown attribute game type name.');
     }
 }

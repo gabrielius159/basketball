@@ -1,15 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Service;
 
 use App\Entity\Server;
 use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * Class ServerService
- *
- * @package App\Service
- */
 class ServerService
 {
     /**
@@ -30,15 +25,10 @@ class ServerService
     /**
      * @return Server|null
      */
-    public function getCurrentServer(): Server
+    public function getCurrentServer(): ?Server
     {
-        /**
-         * @var Server $server
-         */
-        $server = $this->entityManager->getRepository(Server::class)->findOneBy([
+        return $this->entityManager->getRepository(Server::class)->findOneBy([
             'name' => Server::SERVER_ONE
         ]);
-
-        return $server;
     }
 }
