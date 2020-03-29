@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Buyout from team{% endblock %}
+{% block title %}Season management{% endblock %}
 
 {% block body %}
 
@@ -18,16 +18,47 @@
                     <div class="card-header">Manage season <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-8 offset-md-2 pb-3">
-                                <p>Season status: <span class="yellowColor font-weight-bold">{{ seasonStatus }}</span></p>
-
-                                {{ form_start(form) }}
-
-                                {{ form_widget(form) }}
-                                <button type="submit" class="btn btn-md btn-warning">Submit</button>
-                                {{ form_end(form) }}
+                            <div class="col text-center">
+                                Server name
+                            </div>
+                            <div class="col text-center">
+                                Season number
+                            </div>
+                            <div class="col text-center">
+                                Season status
+                            </div>
+                            <div class="col text-center">
+                                Actions
                             </div>
                         </div>
+                        <hr>
+                        {% for server in servers %}
+                            <div class="row">
+                                <div class="col text-center">
+                                    {{ server.name }}
+                                </div>
+                                <div class="col text-center">
+                                    {{ server.seasonId }}
+                                </div>
+                                <div class="col text-center">
+                                    {{ server.seasonStatus }}
+                                </div>
+                                <div class="col text-center">
+                                    {% if server.seasonStatus == constant('App\\Entity\\Season::STATUS_PREPARING') %}
+                                        <a href="{{ path('admin_start_season', { 'id': server.id }) }}" class="btn btn-sm btn-danger">Start season</a>
+                                    {% endif %}
+                                    {% if server.seasonStatus == constant('App\\Entity\\Season::STATUS_ACTIVE') %}
+                                        <div class="btn-group-vertical btn-group-sm" role="group" aria-label="Basic example">
+                                            <a class="btn btn-warning" href="{{ path('admin_simulate_season', { 'id': server.id }) }}">Simulate season</a>
+                                            <a class="btn btn-secondary" href="{{ path('admin_simulate_one_game', { 'id': server.id }) }}">Simulate one game</a>
+                                            <a class="btn btn-secondary" href="{{ path('admin_simulate_two_games', { 'id': server.id }) }}">Simulate two game</a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <hr>
+                        {% endfor %}
+
                     </div>
                 </div>
 

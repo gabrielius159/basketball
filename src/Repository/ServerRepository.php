@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Season;
 use App\Entity\Server;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -19,32 +20,21 @@ class ServerRepository extends ServiceEntityRepository
         parent::__construct($registry, Server::class);
     }
 
-    // /**
-    //  * @return Server[] Returns an array of Server objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return array
+     */
+    public function findServersWithActiveSeason(): array
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $statuses = [
+            Season::STATUS_ACTIVE,
+            Season::STATUS_PREPARING
+        ];
 
-    /*
-    public function findOneBySomeField($value): ?Server
-    {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
+            ->select('s.id, s.name, season.id AS seasonId, season.status AS seasonStatus')
+            ->innerJoin('s.seasons', 'season', 'WITH', 'season.server = s.id AND season.status IN (:statuses)')
+            ->setParameter('statuses', $statuses)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }
