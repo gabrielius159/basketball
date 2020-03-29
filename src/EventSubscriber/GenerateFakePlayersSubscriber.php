@@ -150,7 +150,7 @@ class GenerateFakePlayersSubscriber implements EventSubscriberInterface
                 ->setServer($team->getServer())
                 ->setTeam($team)
                 ->setIsRealPlayer(false)
-                ->setContractSalary((float) rand(PlayerService::DRAFT_PICK_SALARY_A_GAME, 1000))
+                ->setContractSalary((float) rand((int) PlayerService::DRAFT_PICK_SALARY_A_GAME, 1000))
                 ->setContractYears(rand(1, 4))
                 ->setUser(null)
                 ->setHeight(rand($minHeight, $maxHeight))

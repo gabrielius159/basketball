@@ -459,7 +459,7 @@ class SeasonService
                 }
             }
 
-            $playerScore->setPoints($points < 0 ? 0 : $points);
+            $playerScore->setPoints($points < 0 ? 0 : (int) $points);
 
             /**
              * ---------------------------------------------------------------------------------------------------------
@@ -505,7 +505,7 @@ class SeasonService
                 }
             }
 
-            $playerScore->setAssists($assists);
+            $playerScore->setAssists((int) $assists);
 
             /**
              * ---------------------------------------------------------------------------------------------------------
@@ -551,7 +551,7 @@ class SeasonService
                 }
             }
 
-            $playerScore->setRebounds($rebounds);
+            $playerScore->setRebounds((int) $rebounds);
 
             /**
              * ---------------------------------------------------------------------------------------------------------
@@ -590,7 +590,7 @@ class SeasonService
                 $steals += ceil(($stealBadges * 2) * $this->faker->randomFloat(2, 0.5, 1));
             }
 
-            $playerScore->setSteals($steals);
+            $playerScore->setSteals((int) $steals);
 
             /**
              * ---------------------------------------------------------------------------------------------------------
@@ -629,7 +629,7 @@ class SeasonService
                 $blocks += ceil(($blockBadges * 2) * $this->faker->randomFloat(2, 0.5, 1));
             }
 
-            $playerScore->setBlocks($blocks);
+            $playerScore->setBlocks((int) $blocks);
 
 
             /**
@@ -711,7 +711,7 @@ class SeasonService
             }
 
 
-            $playerScore->setPoints($points < 0 ? 0 : $points);
+            $playerScore->setPoints($points < 0 ? 0 : (int) $points);
 
             /**
              * ---------------------------------------------------------------------------------------------------------
@@ -757,7 +757,7 @@ class SeasonService
                 }
             }
 
-            $playerScore->setAssists($assists);
+            $playerScore->setAssists((int) $assists);
 
             /**
              * ---------------------------------------------------------------------------------------------------------
@@ -804,7 +804,7 @@ class SeasonService
             }
 
 
-            $playerScore->setRebounds($rebounds);
+            $playerScore->setRebounds((int) $rebounds);
 
             /**
              * ---------------------------------------------------------------------------------------------------------
@@ -841,7 +841,7 @@ class SeasonService
             if($stealBadges > 0) {
                 $steals += ceil(($stealBadges * 2) * $this->faker->randomFloat(2, 0.5, 1));
             }
-            $playerScore->setSteals($steals);
+            $playerScore->setSteals((int) $steals);
 
             /**
              * ---------------------------------------------------------------------------------------------------------
@@ -878,7 +878,7 @@ class SeasonService
             if($blockBadges > 0) {
                 $blocks += ceil(($blockBadges * 2) * $this->faker->randomFloat(2, 0.5, 1));
             }
-            $playerScore->setBlocks($blocks);
+            $playerScore->setBlocks((int) $blocks);
 
 
             $playerStats = $player->getCurrentPlayerStats();

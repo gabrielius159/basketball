@@ -7,6 +7,7 @@ use App\Entity\Badge;
 use App\Entity\Coach;
 use App\Entity\Player;
 use App\Entity\Season;
+use App\Entity\Server;
 use App\Entity\Team;
 use App\Entity\TrainingCamp;
 use App\Entity\UserReward;
@@ -20,10 +21,15 @@ use App\Form\SeasonStartFormType;
 use App\Form\TeamType;
 use App\Form\TrainingCampType;
 use App\Form\UserRewardType;
+use App\Message\SimulateGames;
+use App\Message\SimulateOneGame;
+use App\Message\SimulateTwoGames;
+use App\Message\StartSeason;
 use App\Repository\AttributeRepository;
 use App\Repository\BadgeRepository;
 use App\Repository\CoachRepository;
 use App\Repository\PlayerRepository;
+use App\Repository\ServerRepository;
 use App\Repository\TeamRepository;
 use App\Repository\TrainingCampRepository;
 use App\Repository\UserRepository;
@@ -35,6 +41,7 @@ use App\Service\TeamService;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -614,44 +621,221 @@ class AdminController extends BaseController
     }
 
     /**
-     * @Route("/season", name="admin_season", methods={"GET", "POST"})
+     * @Route("/season", name="admin_season", methods={"GET"})
      *
-     * @param Request                 $request
-     * @param ServerService           $serverService
-     * @param SeasonService           $seasonService
-     * @param SeasonManagementService $seasonManagementService
+     * @param Request          $request
+     * @param ServerRepository $serverRepository
+     *
+     * @return Response
+     */
+    public function season(
+        Request $request,
+        ServerRepository $serverRepository
+    ): Response {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $servers = $serverRepository->findServersWithActiveSeason();
+
+        return $this->render('admin/season.html.twig', [
+            'servers' => $servers
+        ]);
+    }
+
+    /**
+     * @Route("/start-season/{id}", name="admin_start_season", methods={"GET"})
+     *
+     * @param Request             $request
+     * @param ServerRepository    $serverRepository
+     * @param SeasonService       $seasonService
+     * @param MessageBusInterface $messageBus
+     * @param int                 $id
+     *
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function startSeasonAction(
+        Request $request,
+        ServerRepository $serverRepository,
+        SeasonService $seasonService,
+        MessageBusInterface $messageBus,
+        int $id
+    ): Response {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $server = $serverRepository->find($id);
+
+        if (!$server instanceof Server) {
+            $this->addFlash('warning', 'Server not found!');
+
+            return $this->redirectToRoute('admin_season');
+        }
+
+        $season = $seasonService->getActiveSeason($server);
+
+        if (!$season instanceof Season) {
+            $this->addFlash('warning', 'Server doesn\'t have season.');
+
+            return $this->redirectToRoute('admin_season');
+        }
+
+        if (count($server->getTeams()) <= 1) {
+            $this->addFlash('warning', 'To start season, you have to create two teams.');
+
+            return $this->redirectToRoute('admin_season');
+        }
+
+        if (!$seasonService->teamsHaveCoach($server)) {
+            $this->addFlash('warning', 'There is teams that doesn\'t have coach.');
+
+            return $this->redirectToRoute('admin_season');
+        }
+
+        $messageBus->dispatch(new StartSeason($server->getId(), $season->getId()));
+        $this->addFlash('success', 'You successfully started season.');
+
+        return $this->redirectToRoute('admin_season');
+    }
+
+    /**
+     * @Route("/simulate-season/{id}", name="admin_simulate_season", methods={"GET"})
+     *
+     * @param Request             $request
+     * @param ServerRepository    $serverRepository
+     * @param SeasonService       $seasonService
+     * @param MessageBusInterface $messageBus
+     * @param int                 $id
      *
      * @return Response
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function season(
+    public function simulateSeasonAction(
         Request $request,
-        ServerService $serverService,
+        ServerRepository $serverRepository,
         SeasonService $seasonService,
-        SeasonManagementService $seasonManagementService
+        MessageBusInterface $messageBus,
+        int $id
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $form = $this->createForm(SeasonStartFormType::class);
-        $form->handleRequest($request);
+        $server = $serverRepository->find($id);
 
-        $server = $serverService->getCurrentServer();
-        $season = $seasonService->getActiveSeason($server);
-
-        if($form->isSubmitted() && $form->isValid()) {
-            $status = $form->getData()['status'];
-
-            list($key, $message) = $seasonManagementService->dispatchChoosenActionAndReturnMessage($status, $season);
-            $this->addFlash($key, $message);
+        if (!$server instanceof Server) {
+            $this->addFlash('warning', 'Server not found!');
 
             return $this->redirectToRoute('admin_season');
         }
 
-        return $this->render('admin/season.html.twig', [
-            'form' => $form->createView(),
-            'seasonStatus' => $seasonService->getSeasonStatusName($seasonService->getActiveSeason($server)->getStatus())
-        ]);
+        $season = $seasonService->getActiveSeason($server);
+
+        if (!$season instanceof Season) {
+            $this->addFlash('warning', 'Server doesn\'t have season.');
+
+            return $this->redirectToRoute('admin_season');
+        }
+
+        $messageBus->dispatch(new SimulateGames($season->getId(), $server->getId()));
+
+        $this->addFlash('success', 'Simulation started.');
+
+        sleep(5);
+
+        return $this->redirectToRoute('admin_season');
+    }
+
+    /**
+     * @Route("/simulate-one-game/{id}", name="admin_simulate_one_game", methods={"GET"})
+     *
+     * @param Request             $request
+     * @param ServerRepository    $serverRepository
+     * @param SeasonService       $seasonService
+     * @param MessageBusInterface $messageBus
+     * @param int                 $id
+     *
+     * @return Response
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function simulateOneSeasonGameAction(
+        Request $request,
+        ServerRepository $serverRepository,
+        SeasonService $seasonService,
+        MessageBusInterface $messageBus,
+        int $id
+    ): Response {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $server = $serverRepository->find($id);
+
+        if (!$server instanceof Server) {
+            $this->addFlash('warning', 'Server not found!');
+
+            return $this->redirectToRoute('admin_season');
+        }
+
+        $season = $seasonService->getActiveSeason($server);
+
+        if (!$season instanceof Season) {
+            $this->addFlash('warning', 'Server doesn\'t have season.');
+
+            return $this->redirectToRoute('admin_season');
+        }
+
+        $messageBus->dispatch(new SimulateOneGame($season->getId()));
+
+        $this->addFlash('success', 'One game simulated.');
+
+        return $this->redirectToRoute('admin_season');
+    }
+
+    /**
+     * @Route("/simulate-two-games/{id}", name="admin_simulate_two_games", methods={"GET"})
+     *
+     * @param Request             $request
+     * @param ServerRepository    $serverRepository
+     * @param SeasonService       $seasonService
+     * @param MessageBusInterface $messageBus
+     * @param int                 $id
+     *
+     * @return Response
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function simulateTwoSeasonGamesAction(
+        Request $request,
+        ServerRepository $serverRepository,
+        SeasonService $seasonService,
+        MessageBusInterface $messageBus,
+        int $id
+    ): Response {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $server = $serverRepository->find($id);
+
+        if (!$server instanceof Server) {
+            $this->addFlash('warning', 'Server not found!');
+
+            return $this->redirectToRoute('admin_season');
+        }
+
+        $season = $seasonService->getActiveSeason($server);
+
+        if (!$season instanceof Season) {
+            $this->addFlash('warning', 'Server doesn\'t have season.');
+
+            return $this->redirectToRoute('admin_season');
+        }
+
+        $messageBus->dispatch(new SimulateTwoGames($season->getId()));
+
+        $this->addFlash('success', 'Two games simulated.');
+
+        return $this->redirectToRoute('admin_season');
     }
 
     /**
