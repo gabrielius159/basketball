@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Form;
 
@@ -17,9 +17,6 @@ use Symfony\Component\Validator\Constraints\Length;
 
 class BadgeType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
     private $entityManager;
 
     /**
@@ -42,7 +39,7 @@ class BadgeType extends AbstractType
 
         $builder
             ->add('name', TextType::class, [
-                'label' => '*Badge name:',
+                'label' => 'form.badge_type.label.name',
                 'required' => true,
                 'constraints' => [
                     new Length(
@@ -52,16 +49,18 @@ class BadgeType extends AbstractType
                     )
                 ],
                 'attr' => [
-                    'placeholder' => 'Example: "Flashy passer"'
-                ]
+                    'placeholder' => 'form.badge_type.placeholder.name'
+                ],
+                'translation_domain' => 'messages',
             ])
             ->add('attribute', ChoiceType::class, [
-                'label' => 'Skill:',
+                'label' => 'form.badge_type.label.attribute',
                 'required' => true,
                 'choices' => $attributes,
                 'choice_label' => function(Attribute $attribute, $key, $value) {
                     return $attribute->getName();
-                }
+                },
+                'translation_domain' => 'messages',
             ])
         ;
     }

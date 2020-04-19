@@ -1,36 +1,36 @@
 <div class="card bg-custom-dark">
-    <div class="card-header">Menu</div>
+    <div class="card-header">{{ 'admin_navigation.header' | trans }}</div>
     <div class="card-body">
         <ul class="nav flex-column bg-custom-dark text-white text-decoration-none text-uppercase">
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ path('admin_season') }}">Manage season</a>
+                <a class="nav-link text-white" href="{{ path('admin_season') }}">{{ 'admin_navigation.season' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ path('list_attribute') }}">Attribute list</a>
+                <a class="nav-link text-white" href="{{ path('list_attribute') }}">{{ 'admin_navigation.attribute' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ path('list_badge') }}">Badge list</a>
+                <a class="nav-link text-white" href="{{ path('list_badge') }}">{{ 'admin_navigation.badge' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ path('list_coach') }}">Coach list</a>
+                <a class="nav-link text-white" href="{{ path('list_coach') }}">{{ 'admin_navigation.coach' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ path('list_player') }}">Player list</a>
+                <a class="nav-link text-white" href="{{ path('list_player') }}">{{ 'admin_navigation.player' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ path('list_team') }}">Team list</a>
+                <a class="nav-link text-white" href="{{ path('list_team') }}">{{ 'admin_navigation.team' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ path('list_training_camp') }}">Training camp list</a>
+                <a class="nav-link text-white" href="{{ path('list_training_camp') }}">{{ 'admin_navigation.camp' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ path('list_user') }}">User list</a>
+                <a class="nav-link text-white" href="{{ path('list_user') }}">{{ 'admin_navigation.user' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ path('set_user_rewards') }}">Set user rewards</a>
+                <a class="nav-link text-white" href="{{ path('set_user_rewards') }}">{{ 'admin_navigation.rewards' | trans }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ path('admin_change_coach') }}">Change / Set coach</a>
+                <a class="nav-link text-white" href="{{ path('admin_change_coach') }}">{{ 'admin_navigation.change_coach' | trans }}</a>
             </li>
         </ul>
     </div>

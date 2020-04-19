@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin board{% endblock %}
+{% block title %}{{ 'pages.titles.dashboard' | trans }}{% endblock %}
 
 {% block body %}
 
@@ -13,9 +13,9 @@
 
             <div class="col-md-8 mb-5">
                 <div class="card bg-custom-dark">
-                    <div class="card-header">Admin board</div>
+                    <div class="card-header">{{ 'dashboard.header' | trans }}</div>
                     <div class="card-body">
-                        <p>Welcome to admin board. This is the place where you can manage the project.</p>
+                        <p>{{ 'dashboard.text' | trans }}</p>
                     </div>
                 </div>
             </div>

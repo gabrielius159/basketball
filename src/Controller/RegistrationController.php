@@ -40,7 +40,6 @@ class RegistrationController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
@@ -57,9 +56,10 @@ class RegistrationController extends BaseController
             $entityManager->persist($role);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Registration successful, welcome aboard!');
+            $this->get('session')->set('_locale', $form->get('locale')->getData());
+            $request->setLocale($form->get('locale')->getData());
 
-            // do anything else you need here, like send an email
+            $this->addFlash('success', 'registration.success');
 
             return $guardHandler->authenticateUserAndHandleSuccess(
                 $user,

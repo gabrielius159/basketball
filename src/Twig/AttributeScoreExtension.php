@@ -1,15 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Twig;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-/**
- * Class AttributeScoreExtension
- *
- * @package App\Twig
- */
 class AttributeScoreExtension extends AbstractExtension
 {
     const A_PLUS = 97;

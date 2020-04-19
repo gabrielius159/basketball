@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New training camp{% endblock %}
+{% block title %}{{ 'pages.title.new_training_camp' | trans }}{% endblock %}
 
 {% block body %}
 
@@ -14,7 +14,7 @@
 
             <div class="col-md-8 mb-5">
                 <div class="card bg-custom-dark">
-                    <div class="card-header">Create new training camp <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-header">{{ 'template.training_camp.header' | trans }} <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">{{ 'template.admin.dashboard' | trans }}</a></div>
                     <div class="card-body">
                         <div class="col-md-10 offset-md-1">
                             {% if errors.count > 0 %}
@@ -31,9 +31,8 @@
 
                             {{ form_widget(form, {'attr': {'class': 'text-white-50'}}) }}
 
-                            <button type="submit" class="btn btn-md btn-warning">Create</button>
+                            <button type="submit" class="btn btn-md btn-warning">{{ 'form.buttons.create' | trans }}</button>
                             {{ form_end(form) }}
-                            <small class="form-text text-muted mt-2">* Required fields.</small>
                         </div>
                     </div>
                 </div>

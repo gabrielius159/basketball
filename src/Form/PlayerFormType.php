@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Form;
 
@@ -22,16 +22,8 @@ use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Length;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
-/**
- * Class PlayerFormType
- *
- * @package App\Form
- */
 class PlayerFormType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
     private $em;
 
     /**
@@ -59,7 +51,7 @@ class PlayerFormType extends AbstractType
 
         $builder
             ->add('firstname', TextType::class, [
-                'label' => '*Firstname:',
+                'label' => 'form.coach_type.label.firstname',
                 'required' => true,
                 'constraints' => [
                     new Length(
@@ -67,10 +59,11 @@ class PlayerFormType extends AbstractType
                             'min' => 3
                         ]
                     )
-                ]
+                ],
+                'translation_domain' => 'messages',
             ])
             ->add('lastname', TextType::class, [
-                'label' => '*Lastname:',
+                'label' => 'form.coach_type.label.lastname',
                 'required' => true,
                 'constraints' => [
                     new Length(
@@ -78,77 +71,86 @@ class PlayerFormType extends AbstractType
                             'min' => 3
                         ]
                     )
-                ]
+                ],
+                'translation_domain' => 'messages',
             ])
             ->add('weight', IntegerType::class, [
-                'label' => '*Weight (kg):',
+                'label' => 'form.player_type.label.weight',
                 'required' => true,
                 'attr' => [
                     'min' => Player::MIN_WEIGHT,
                     'max' => Player::MAX_WEIGHT,
                     'value' => Player::MIN_WEIGHT
-                ]
+                ],
+                'translation_domain' => 'messages',
             ])
             ->add('height', IntegerType::class, [
-                'label' => '*Height (cm):',
+                'label' => 'form.player_type.label.height',
                 'required' => true,
                 'attr' => [
                     'min' => Player::MIN_HEIGHT,
                     'max' => Player::MAX_HEIGHT,
                     'value' => Player::MIN_HEIGHT
-                ]
+                ],
+                'translation_domain' => 'messages',
             ])
             ->add('born', DateType::class, [
-                'label' => '*Year born:',
+                'label' => 'form.player_type.label.year',
                 'years' => range(1970,2004),
-                'required' => true
+                'required' => true,
+                'translation_domain' => 'messages',
             ])
             ->add('position', ChoiceType::class, [
-                'label' => 'Pick your position:',
+                'label' => 'form.player_type.label.position',
                 'required' => true,
                 'choices' => $positions,
                 'choice_label' => function(Position $position, $key, $value) {
                     return $position->getName();
                 },
+                'translation_domain' => 'messages',
             ])
             ->add('country', ChoiceType::class, [
-                'label' => 'Country:',
+                'label' => 'form.player_type.label.country',
                 'empty_data' => false,
-                'placeholder' => 'Select country',
+                'placeholder' => 'form.player_type.placeholder.country',
                 'required' => true,
                 'choices' => $countries,
                 'choice_label' => function(Country $country, $key, $value) {
                     return $country->getName();
-                }
+                },
+                'translation_domain' => 'messages',
             ])
             ->add('server', ChoiceType::class, [
-                'label' => 'Pick a server:',
+                'label' => 'form.player_type.label.server',
                 'required' => true,
                 'choices' => $server,
                 'choice_label' => function(Server $server, $key, $value) {
                     return $server->getName();
-                }
+                },
+                'translation_domain' => 'messages',
             ])
             ->add('firstType', ChoiceType::class, [
-                'label' => 'Strongest skill:',
-                'help' => 'Upgrading selected skill will cost less.',
+                'label' => 'form.player_type.label.first_type',
+                'help' => 'form.player_type.help.first_type',
                 'required' => true,
                 'choices' => $gameTypes,
                 'choice_label' => function(GameType $gameType, $key, $value) {
                     return $gameType->getName();
-                }
+                },
+                'translation_domain' => 'messages',
             ])
             ->add('secondType', ChoiceType::class, [
-                'label' => 'Second strongest skill:',
-                'help' => 'Upgrading selected skill will cost less.',
+                'label' => 'form.player_type.label.second_type',
+                'help' => 'form.player_type.help.second_type',
                 'required' => true,
                 'choices' => $gameTypes,
                 'choice_label' => function(GameType $gameType, $key, $value) {
                     return $gameType->getName();
-                }
+                },
+                'translation_domain' => 'messages',
             ])
             ->add('imageFile', VichFileType::class, [
-                'label' => '*Upload your player picture:',
+                'label' => 'Upload your player picture:',
                 'help' => 'Picture should be face of a player or full height player (Players with incorrect images will be deleted or might be banned).',
                 'required' => true,
                 'download_uri' => false,
@@ -163,7 +165,8 @@ class PlayerFormType extends AbstractType
                     'class' => 'custom-file-input',
                     'id' => 'playerFileUpload',
                     'placeholder' => 'Valid file formats: jpg, jpeg, png.'
-                ]
+                ],
+                'translation_domain' => 'messages',
             ])
             ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $formEvent) use($entityManager) {
                 $data = $formEvent->getData();

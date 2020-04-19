@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}List of all players{% endblock %}
+{% block title %}{{ 'pages.titles.list_player' | trans }}{% endblock %}
 
 {% block body %}
 
@@ -15,18 +15,18 @@
 
 
                 <div class="card bg-custom-dark">
-                    <div class="card-header">Player list ({{ players.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-header">{{ 'list_player.header' | trans }} ({{ players.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">{{ 'template.admin.dashboard' | trans }}</a></div>
                     <div class="card-body">
                         <div class="row mb-4 d-flex justify-content-center">
-                            <a href="{{ path('delete_players') }}" class="btn btn-sm btn-secondary ml-2">Delete all players</a>
+                            <a href="{{ path('delete_players') }}" class="btn btn-sm btn-secondary ml-2">{{ 'list_player.button.remove_all' | trans }}</a>
                         </div>
                         <div class="row">
                             <div class="col-md-6 offset-md-3">
                                 <form>
                                     <div class="form-group d-flex flex-row">
-                                        <input type="text" name="search" class="form-control" id="exampleFormControlInput1" placeholder="Dwight Howard">
+                                        <input type="text" name="search" class="form-control" id="exampleFormControlInput1" placeholder="{{ 'list_player.placeholder.search' | trans }}">
 
-                                        <button class="btn btn-md btn-warning" type="submit">Search</button>
+                                        <button class="btn btn-md btn-warning" type="submit">{{ 'list_player.button.search' | trans }}</button>
                                     </div>
                                 </form>
                             </div>
@@ -35,12 +35,12 @@
                             <table class="table table-borderless text-center text-white">
                                 <thead class="text-white-50">
                                 <tr>
-                                    <td>Id</td>
-                                    <td></td>
-                                    <td>Player</td>
-                                    <td>Has team?</td>
-                                    <td>Real player?</td>
-                                    <td>Action</td>
+                                    <td>{{ 'list_player.table.header.id' | trans }}</td>
+                                    <td>{{ 'list_player.table.header.image' | trans }}</td>
+                                    <td>{{ 'list_player.table.header.player' | trans }}</td>
+                                    <td>{{ 'list_player.table.header.has_team' | trans }}</td>
+                                    <td>{{ 'list_player.table.header.real_player' | trans }}</td>
+                                    <td>{{ 'list_player.table.header.actions' | trans }}</td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -49,9 +49,9 @@
                                         <td>{{ player.id }}</td>
                                         <td>{% if player.image %} <img width="120px" height="120px" src="{{ vich_uploader_asset(player, 'imageFile') }}">{% else %} <img width="120px" height="120px" src="{{ asset('images/fakePlayers/fakePlayer.jpg') }}">{% endif %}</td>
                                         <td><a href="{{ path('player_index', {'id': player.id}) }}" class="text-decoration-none text-white font-weight-bold">{{ player.firstname }} {{ player.lastname }}</a></td>
-                                        <td>{% if player.team %} Yes {% else %}No{% endif %}</td>
-                                        <td>{% if player.isRealPlayer %}Yes{% else %}No{% endif %}</td>
-                                        <td><a href="{{ url('delete_player', {'id': player.id}) }}" class="btn btn-sm btn-danger">Remove</a></td>
+                                        <td>{% if player.team %} {{ 'list_player.table.data.yes' | trans }} {% else %}{{ 'list_player.table.data.no' | trans }}{% endif %}</td>
+                                        <td>{% if player.isRealPlayer %}{{ 'list_player.table.data.yes' | trans }}{% else %}{{ 'list_player.table.data.no' | trans }}{% endif %}</td>
+                                        <td><a href="{{ url('delete_player', {'id': player.id}) }}" class="btn btn-sm btn-danger">{{ 'list_player.button.remove' | trans }}</a></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

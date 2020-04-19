@@ -1,0 +1,323 @@
+project:
+  error:
+    page_not_found: 'Puslapis nerastas'
+admin:
+  attribute:
+    created: 'Atributas sėkmingai sukurtas.'
+    not_found: "Atributas nerastas."
+    deleted: 'Atributas ištrintas.'
+  team:
+    season_in_progress: "Negalite sukurti komandos, kai vyksta sezonas."
+    created: 'Komanda sukurta.'
+    not_found: "Komanda nerasta."
+    deleted: 'Komanda ištrinta!'
+  coach:
+    created: 'Treneris sukurtas.'
+    not_found: "Treneris nerastas."
+    replace_coach: 'Pirmiausia priskirkite naują trenerį komandai.'
+    deleted: 'Treneris ištrintas.'
+    no_coach: 'Nėra laisvų trenerių, kuriuos galėtumete pakeisti.'
+    changed: 'Treneris pakeistas.'
+    set: 'Šaunu, komanda turi naują trenerį.'
+  badge:
+    created: 'Ženklelis sukurtas.'
+    not_found: "Ženklelis nerastas."
+    deleted: 'Ženklelis ištrintas.'
+  player:
+    season_in_progress: "Žaidėjus galėsite ištrinti, kai pasibaigs sezonas."
+    deleted: 'Žaidėjai ištrinti.'
+    not_found: "Žaidėjas nerastas."
+    one_player_deleted: 'Žaidėjas ištrintas.'
+  season:
+    server:
+      not_found: 'Serveris nerastas!'
+      no_season: "Serveris neturi sezono."
+    no_teams: 'Kad galėtumėte paleisti sezoną, turi būti bent dvi komandos.'
+    no_coach: "Yra komandų, kurios neturi trenerio."
+    started: 'Sezonas pradėtas.'
+    simulation_started: 'Simuliacija pradėta.'
+    one_game_simulation_started: 'Vienerios rungtynės susimuliuotos.'
+    two_games_simulation_started: 'Dvejos rungtynės susimuliuotos.'
+  training_camp:
+    created: 'Treniruočių stovykla sukurta.'
+    not_found: 'Treniruočių stovykla nerasta.'
+    deleted: 'Treniruočių stovykla ištrinta.'
+  rewards:
+    already_set: 'Apdovanojimai jau uždėti.'
+    created: 'Apdovanojimai uždėti.'
+player:
+  has_player: 'Jūs jau turite žaidėją.'
+  created: 'Žaidėjas sukurtas.'
+  no_teams: 'Apgailėstaujame, bet nei viena komanda nesusidomėjo jumis. Esate laisvasis agentas.'
+  drafted: 'Sveikiname, jūs buvote pašauktas teamName pick šaukimu!'
+  no_player: 'Pirmiausia susikurkite savo žaidėją.'
+  not_found: 'Žaidėjas nerastas.'
+  no_badge: 'Nėra ženklelių.'
+user:
+  team_left: 'Jūs palikote komandą.'
+  not_interested: 'Apgailėstaujame, tačiau komandos nesudominote.'
+  cannot_join: 'Jūs dabar negalite patekti į komandą, laukite kol pasibaigs sezonas.'
+  training_camp:
+    in_camp: 'Jūs jau ir taip treniruočių stovykloje.'
+    no_player: 'Pirmiausia susikurkite savo žaidėją.'
+  no_money: "Jums neužtenka pinigų."
+game:
+  not_found: 'Rungtynės nerastos.'
+  not_finished_or_started: 'Rungtynės neprasidėjo.'
+registration:
+  success: 'Registracija sėkmingai baigta!'
+footer:
+  text: '© Created by Gabrielius Salichovas, PI16B'
+form:
+  attribute_type:
+    label:
+      name: 'Atributo pavadinimas:'
+      default_value: 'Numatytoji reikšmė:'
+      game_type: 'Kategorija:'
+    placeholder:
+      name: 'Pvz.: "Speed"'
+    help:
+      default_value: 'Ši reikšmė bus priskirta visiems žaidėjams [Rėžiai: 0 - 100].'
+  badge_type:
+    label:
+      name: 'Ženkliuko pavadinimas:'
+      attribute: 'Įgūdis:'
+    placeholder:
+      name: 'Pvz.: "Flashy passer"'
+  change_coach_type:
+    label:
+      team: 'Pasirinkite komandą:'
+      coach: 'Pasirinkite naują trenerį:'
+  coach_type:
+    label:
+      firstname: 'Vardas:'
+      lastname: 'Pavardė:'
+      team: 'Pasirinkite komandą:'
+      game_type: 'Trenerio specializacija:'
+    placeholder:
+      firstname: 'Pvz.: "Coach"'
+      lastname: 'Pvz.: "Carter"'
+      team: 'Be komandos'
+  player_type:
+    label:
+      weight: 'Svoris (kg):'
+      height: 'Ūgis (cm):'
+      year: 'Gimimo metai:'
+      position: 'Pasirinkite poziciją:'
+      country: 'Valstybė:'
+      server: 'Pasirinkite serverį:'
+      first_type: 'Stipriausias įgūdis:'
+      second_type: 'Sekantis stipriausias įgūdis:'
+    placeholder:
+      country: 'Pasirinkite šalį'
+    help:
+      first_type: 'Jums pigiau kainuos tobulinti šį įgūdį.'
+      second_type: 'Jums pigiau kainuos tobulinti šį įgūdį.'
+  helper:
+    required_fields: '* Privalomi laukai.'
+  buttons:
+    create: 'Sukurti'
+    list_user:
+      search:
+        placeholder: 'name@example.com'
+        text: 'Ieškoti'
+template:
+  admin:
+    dashboard: 'Grįžti į titulinį'
+  player:
+    buyout:
+      title: 'Išpirkimas iš <span class="yellowColor font-weight-bold">teamName</span>'
+      text: 'Ar jūs tikrai norite palikti šią komandą ir tapti laisvuoju agentu?'
+  attribute:
+    header: 'Sukurti naują atributą'
+  badge:
+    header: 'Sukurti naują ženklelį'
+  coach:
+    header: 'Sukurti naują trenerį'
+  team:
+    header: 'Sukurti naują komandą'
+  training_camp:
+    header: 'Sukurti naują treniruočių stovyklą'
+  reward:
+    header: 'Sukurti naujus apdovanojimus'
+  season_management:
+    header: 'Valdyti sezoną'
+  list_user:
+    header: 'Naudotojų sąrašas'
+pages:
+  titles:
+    new_attribute: 'Naujas atributas'
+    new_badge: 'Naujas ženkliukas'
+    buyout: 'Išpirkimas iš komandos'
+    new_coach: 'Naujas treneris'
+    new_team: 'Nauja komanda'
+    new_training_camp: 'Nauja treniruočių stovykla'
+    new_reward: 'Nauji apdovanojimai'
+    season_management: 'Sezono valdymas'
+    list_user: 'Žaidėjų sąrašas'
+    list_training_camp: 'Treniruočių stovyklų sąrašas'
+    list_team: 'Komandų sąrašas'
+    list_player: 'Žaidėjų sąrašas'
+    list_coach: 'Trenerių sąrašas'
+    list_badge: 'Ženkliukų sąrašas'
+    list_attribute: 'Įgūdžių sąrašas'
+    dashboard: 'Administratoriaus valdymas'
+    change_coach: 'Pakeisti trenerį'
+    new: 'Sukurti savo žaidėją'
+season_management:
+  table:
+    header:
+      server_name: 'Serverio pavadinimas'
+      season_number: 'Sezonas'
+      season_status: 'Sezono statusas'
+      actions: 'Veiksmai'
+  actions:
+    start_season: 'Pradėti sezoną'
+    simulate_season: 'Simuliuoti sezoną'
+    simulate_one_game: 'Simuliuoti rungtynes'
+    simulate_two_games: 'Simuliuoti dvejas rungtynes'
+list_user:
+  table:
+    header:
+      id: 'ID'
+      link_to_player: 'Nuoroda į žaidėją'
+      email: 'El. paštas'
+      impersonate: 'Impersonacija'
+  link:
+    text:
+      player: 'Žaidėjas'
+      no_player: 'Nėra žaidėjo'
+list_training_camp:
+  header: 'Treniruočių stovykla'
+  button:
+    new: 'Sukurti treniruočių stovyklą'
+    remove: 'Pašalinti'
+  table:
+    header:
+      training_camp: 'Treniruočių stovykla'
+      improves: 'Patobulina'
+      duration: 'Trukmė'
+      price: 'Kaina'
+      gives_badge: 'Suteikia ženkliuką?'
+      actions: 'Veiksmai'
+    data:
+      gives_badge_no: 'Ne'
+list_team:
+  header: 'Komandų sąrašas'
+  button:
+    new: 'Sukurti komandą'
+    remove: 'Pašalinti'
+  table:
+    header:
+      team: 'Komanda'
+      salary_cap: 'Algų kepurė'
+      actions: 'Veiksmai'
+list_player:
+  header: 'Žaidėjų sąrašas'
+  button:
+    remove_all: 'Ištrinti visus žaidėjus'
+    search: 'Ieškoti'
+    remove: 'Ištrinti'
+  placeholder:
+    search: 'Dwight Howard'
+  table:
+    header:
+      id: 'ID'
+      image: 'Nuotrauka'
+      player: 'Žaidėjas'
+      has_team: 'Turi komandą?'
+      real_player: 'Tikras žaidėjas?'
+      actions: 'Veiksmai'
+  data:
+    yes: 'Taip'
+    no: 'Ne'
+list_coach:
+  header: 'Trenerių sąrašas'
+  button:
+    new: 'Sukurti trenerį'
+    remove: 'Pašalinti'
+  table:
+    header:
+      coach: 'Treneris'
+      has_team: 'Turi komandą?'
+      actions: 'Veiksmai'
+list_badge:
+  header: 'Ženkliukų sąrašas'
+  button:
+    new: 'Sukurti ženkliuką'
+    remove: 'Pašalinti'
+  table:
+    header:
+      badge: 'Ženkliukas'
+      bonus_for: 'Patobulina'
+      actions: 'Veiksmai'
+list_attribute:
+  header: 'Įgūdžių sąrašas'
+  button:
+    new: 'Sukurti įgūdį'
+  table:
+    header:
+      name: 'Įgūdžio pavadinimas'
+      actions: 'Veiksmai'
+button:
+  remove: 'Pašalinti'
+dashboard:
+  header: 'Administratoriaus valdymas'
+  text: 'Čia galite valdyti projektą.'
+change_coach:
+  header: 'Keisti trenerį'
+  button:
+    new: 'Sukurti naują trenerį'
+    change: 'Pakeisti'
+admin_navigation:
+  header: 'Meniu'
+  season: 'Valdyti serverius'
+  attribute: 'Įgūdžių sąrašas'
+  badge: 'Ženkliukų sąrašas'
+  coach: 'Trenerių sąrašas'
+  player: 'Žaidėjų sąrašas'
+  team: 'Komandų sąrašas'
+  camp: 'Treniruočių stovyklų sąrašas'
+  user: 'Naudotojų sąrašas'
+  rewards: 'Nustatyti apdovanojimus'
+  change_coach: 'Keisti / Priskirti trenerį'
+homepage:
+  title: "Basketball Player's Career Simulator"
+  button:
+    login: 'Prisijungti'
+    register: 'Registruotis'
+    logout: 'Atsijungti'
+  showcase:
+    start: 'Pradėk savo '
+    end: 'kelionę'
+    text: 'Kovok, laimėk ir būk apdovanotas.'
+navigation:
+  home: 'Pagrindinis'
+  free_agents: 'Laisvieji agentai'
+  camp: 'Stovyklos'
+  new_player: 'Sukurti savo žaidėją'
+  admin: 'Administratoriaus valdymas'
+  check_my_player: 'Peržiūrėti savo žaidėją'
+player_information:
+  status: 'Žaidėjo statusas'
+  statuses:
+    training: 'Treniruojasi'
+    rest: 'Ilsisi'
+  born: 'Gimimo data'
+  position: 'Pozicija'
+  country: 'Valstybė'
+  skills: 'Stipriausi įgūdžiai'
+  team: 'Komanda'
+  none: 'Nėra'
+  contract_ends: 'Kontraktas baigiasi po'
+  seasons: 'sezono (-ų)'
+  jersey: 'Marškinėlių numeris'
+  height: 'Ūgis, Svoris'
+  rookie: 'Metų naujokas %season% sezone.'
+  averages: 'Averages in each season'
+  first_season: "Tai yra pirmasis žaidėjo sezonas."
+new_player:
+  header: 'Create your player'
+  button:
+    create: 'Sukurti žaidėją'
+

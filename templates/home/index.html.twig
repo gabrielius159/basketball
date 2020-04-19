@@ -1,19 +1,19 @@
 {% extends 'homepage_base.html.twig' %}
 
-{% block title %}Basketball Player's Career Simulator{% endblock %}
+{% block title %}{{ 'homepage.title' | trans }}{% endblock %}
 {% block body %}
 
    <header class="showcase">
        <div class="showcase-top">
            <img src="{{ asset('images/logo/logo.png') }}" alt="Logo">
-           <a href="{{ path('app_login') }}" class="btn btn-rounded">Login</a>
+           <a href="{{ path('app_login') }}" class="btn btn-rounded">{{ 'homepage.button.login' | trans }}</a>
        </div>
 
        <div class="showcase-content">
-           <h1>Start your <span class="yellowMarker">journey</span></h1>
-           <p>Compete, win and get rewarded.</p>
+           <h1>{{ 'homepage.showcase.start' | trans }}<span class="yellowMarker">{{ 'homepage.showcase.end' | trans }}</span></h1>
+           <p>{{ 'homepage.showcase.text' | trans }}</p>
            <a href="{{ path('app_register') }}" class="btn btn-xl">
-               Register <i class="fas fa-chevron-right btn-icon"></i>
+               {{ 'homepage.button.register' | trans }} <i class="fas fa-chevron-right btn-icon"></i>
            </a>
        </div>
    </header>
@@ -90,7 +90,7 @@
     </section>
 
     <footer class="footer">
-        <p>&copy; Created by Gabrielius Salichovas, PI16B</p>
+        <p>{{ 'footer.text' | trans }}</p>
     </footer>
 
 

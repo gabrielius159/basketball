@@ -121,7 +121,7 @@ class TeamController extends BaseController
         if($form->isSubmitted() && $form->isValid()) {
             $teamService->buyoutPlayerFromTeam($this->getUser()->getPlayer());
 
-            $this->addFlash('warning', 'You left the team.');
+            $this->addFlash('warning', 'user.team_left');
 
             return $this->redirectToRoute('player_index', [
                 'id' => $this->getUser()->getPlayer()->getId()
@@ -162,13 +162,13 @@ class TeamController extends BaseController
         $team = $teamService->findOneById($id);
 
         if(!$team) {
-            $this->addFlash('warning', 'Team couldn\'t be found.');
+            $this->addFlash('warning', 'admin.team.not_found');
 
             return $this->redirectToRoute('team');
         }
 
         if(count($team->getRealPlayers()) > 9) {
-            $this->addFlash('warning', 'Sorry, team is not interested in any addition.');
+            $this->addFlash('warning', 'user.not_interested');
 
             return $this->redirectToRoute('team');
         }
@@ -177,7 +177,7 @@ class TeamController extends BaseController
         $gamesPlayed = $team->getCurrentTeamStatus()->getWin() + $team->getCurrentTeamStatus()->getLose();
 
         if($gamesPlayed >= $teamCount) {
-            $this->addFlash('warning', 'You cannot join any team right now, wait till the season ends.');
+            $this->addFlash('warning', 'user.cannot_join');
 
             return $this->redirectToRoute('team');
         }
@@ -273,7 +273,7 @@ class TeamController extends BaseController
         $team = $teamRepository->find($id);
 
         if(!$team) {
-            $this->addFlash('warning', 'Team couldn\'t be found.');
+            $this->addFlash('warning', 'admin.team.not_found');
 
             return $this->redirectToRoute('team');
         }
@@ -307,7 +307,7 @@ class TeamController extends BaseController
         if(!$this->getUser()->getPlayer()) {
             $this->addFlash(
                 'warning',
-                'You need to create your player first to see training camps.'
+                'user.training_camp.no_player'
             );
 
             return $this->redirectToRoute('team');
@@ -353,7 +353,7 @@ class TeamController extends BaseController
         $trainingCamp = $trainingCampRepository->find($id);
 
         if(!$trainingCamp) {
-            $this->addFlash('warning', 'Training camp not found.');
+            $this->addFlash('warning', 'admin.training_camp.not_found');
 
             return $this->redirectToRoute('team_training_camp');
         }
@@ -370,13 +370,13 @@ class TeamController extends BaseController
         }
 
         if($player->getMoney() < $price) {
-            $this->addFlash('warning', 'You don\'t have enough money.');
+            $this->addFlash('warning', 'user.no_money');
 
             return $this->redirectToRoute('team_training_camp');
         }
 
         if(!$player->isTrainingFinished()) {
-            $this->addFlash('warning', 'You are already in training camp.');
+            $this->addFlash('warning', 'user.training_camp.in_camp');
 
             return $this->redirectToRoute('team_training_camp');
         }
@@ -409,7 +409,7 @@ class TeamController extends BaseController
         $gameDay = $gameDayRepository->find($id);
 
         if(!$gameDay) {
-            $this->addFlash('warning', 'Game was not found.');
+            $this->addFlash('warning', 'game.not_found');
 
             return $this->redirectToRoute('team_schedule');
         }

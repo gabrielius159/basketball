@@ -49,7 +49,7 @@ class PlayerController extends BaseController
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         if($this->getUser()->getPlayer() instanceof Player) {
-            $this->addFlash('warning', 'You already have player!');
+            $this->addFlash('warning', 'player.has_player');
 
             return $this->redirectToRoute('home');
         }
@@ -74,14 +74,14 @@ class PlayerController extends BaseController
             $event = new SetPlayerAttributesForNewPlayerEvent($player);
             $eventDispatcher->dispatch($event, SetPlayerAttributesForNewPlayerEvent::NAME);
 
-            [$teamName, $draftPick] = $playerService->draftPlayer($player);
+            list($teamName, $draftPick) = $playerService->draftPlayer($player);
 
             if($draftPick !== 0) {
                 $this->addFlash('draftPick', $draftPick);
                 $this->addFlash('teamName', $teamName);
-                $this->addFlash('success', 'Player created successfully.');
+                $this->addFlash('success', 'player.created');
             } else {
-                $this->addFlash('warning', 'Sorry to say, but no team was interested in you, you are a free agent.');
+                $this->addFlash('warning', 'player.no_teams');
             }
 
             return $this->redirectToRoute('player_index', [
@@ -118,7 +118,7 @@ class PlayerController extends BaseController
         if(!$this->getUser()->getPlayer()) {
             $this->addFlash(
                 'warning',
-                'You need to create your player first to see other player profiles.'
+                'player.no_player'
             );
 
             return $this->redirectToRoute('team');
@@ -164,7 +164,7 @@ class PlayerController extends BaseController
         if(!$this->getUser()->getPlayer()) {
             $this->addFlash(
                 'warning',
-                'You need to create your player first to see other player profiles.'
+                'player.no_player'
             );
 
             return $this->redirectToRoute('team');
@@ -175,7 +175,7 @@ class PlayerController extends BaseController
         $player = $playerRepository->find($id);
 
         if(!$player) {
-            $this->addFlash('warning', 'Player not found.');
+            $this->addFlash('warning', 'player.not_found');
 
             return $this->redirectToRoute('home');
         }

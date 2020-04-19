@@ -17,7 +17,6 @@ use App\Form\AttributeType;
 use App\Form\BadgeType;
 use App\Form\ChangeCoachType;
 use App\Form\CoachType;
-use App\Form\SeasonStartFormType;
 use App\Form\TeamType;
 use App\Form\TrainingCampType;
 use App\Form\UserRewardType;
@@ -33,7 +32,6 @@ use App\Repository\ServerRepository;
 use App\Repository\TeamRepository;
 use App\Repository\TrainingCampRepository;
 use App\Repository\UserRepository;
-use App\Service\Admin\SeasonManagementService;
 use App\Service\FakePlayerService;
 use App\Service\SeasonService;
 use App\Service\ServerService;
@@ -90,7 +88,7 @@ class AdminController extends BaseController
             $event = new CreatePlayerAttributeForPlayersEvent($attribute);
             $eventDispatcher->dispatch($event, CreatePlayerAttributeForPlayersEvent::NAME);
 
-            $this->addFlash('success', 'Attribute created successfully.');
+            $this->addFlash('success', 'admin.attribute.created');
 
             return $this->redirectToRoute('new_attribute');
         }
@@ -149,7 +147,7 @@ class AdminController extends BaseController
         $attribute = $attributeRepository->find($id);
 
         if(!$attribute) {
-            $this->addFlash('warning', 'Attribute couldn\'t be found.');
+            $this->addFlash('warning', 'admin.attribute.not_found');
 
             return $this->redirectToRoute('list_attribute');
         }
@@ -157,7 +155,7 @@ class AdminController extends BaseController
         $this->getDoctrine()->getManager()->remove($attribute);
         $this->getDoctrine()->getManager()->flush();
 
-        $this->addFlash('success', 'Attribute deleted successfully.');
+        $this->addFlash('success', 'admin.attribute.deleted');
 
         return $this->redirectToRoute('list_attribute');
     }
@@ -190,7 +188,7 @@ class AdminController extends BaseController
 
         if($form->isSubmitted() && $form->isValid()) {
             if($seasonService->getActiveSeason($serverService->getCurrentServer())->getStatus() == Season::STATUS_ACTIVE) {
-                $this->addFlash('warning', 'You can\'t create team when season is in progress.');
+                $this->addFlash('warning', 'admin.team.season_in_progress');
 
                 return $this->redirectToRoute('new_team');
             }
@@ -203,7 +201,7 @@ class AdminController extends BaseController
             $event = new CreateNewTeamTeamStatusEvent($team);
             $eventDispatcher->dispatch($event, CreateNewTeamTeamStatusEvent::NAME);
 
-            $this->addFlash('success', 'Team created successfully.');
+            $this->addFlash('success', 'admin.team.created');
 
             return $this->redirectToRoute('new_team');
         }
@@ -265,13 +263,13 @@ class AdminController extends BaseController
         $team = $teamService->findOneById($id);
 
         if(!$team) {
-            $this->addFlash('warning', 'Team couldn\'t be found.');
+            $this->addFlash('warning', 'admin.team.not_found');
 
             return $this->redirectToRoute('list_team');
         }
 
         $teamService->deleteTeam($team);
-        $this->addFlash('success', 'Team deleted successfully!');
+        $this->addFlash('success', 'admin.team.deleted');
 
         return $this->redirectToRoute('list_team');
     }
@@ -298,7 +296,7 @@ class AdminController extends BaseController
             $em->persist($coach);
             $em->flush();
 
-            $this->addFlash('success', 'Coach created successfully.');
+            $this->addFlash('success', 'admin.coach.created');
 
             return $this->redirectToRoute('new_coach');
         }
@@ -357,13 +355,13 @@ class AdminController extends BaseController
         $coach = $coachRepository->find($id);
 
         if(!$coach) {
-            $this->addFlash('warning', 'Coach couldn\'t be found.');
+            $this->addFlash('warning', 'admin.coach.not_found');
 
             return $this->redirectToRoute('list_coach');
         }
 
         if($coach->getTeam() instanceof Team) {
-            $this->addFlash('warning', 'First find set new coach for the team.');
+            $this->addFlash('warning', 'admin.coach.replace_coach');
 
             return $this->redirectToRoute('list_coach');
         }
@@ -372,7 +370,7 @@ class AdminController extends BaseController
         $em->remove($coach);
         $em->flush();
 
-        $this->addFlash('success', 'Coach deleted successfully.');
+        $this->addFlash('success', 'admin.coach.deleted');
 
         return $this->redirectToRoute('list_coach');
     }
@@ -398,7 +396,7 @@ class AdminController extends BaseController
             $em->persist($badge);
             $em->flush();
 
-            $this->addFlash('success', 'Badge created successfully.');
+            $this->addFlash('success', 'admin.badge.created');
 
             return $this->redirectToRoute('new_badge');
         }
@@ -457,7 +455,7 @@ class AdminController extends BaseController
         $badge = $badgeRepository->find($id);
 
         if(!$badge) {
-            $this->addFlash('warning', 'Badge couldn\'t be found.');
+            $this->addFlash('warning', 'admin.badge.not_found');
 
             return $this->redirectToRoute('list_badge');
         }
@@ -466,7 +464,7 @@ class AdminController extends BaseController
         $em->remove($badge);
         $em->flush();
 
-        $this->addFlash('success', 'Badge deleted successfully.');
+        $this->addFlash('success', 'admin.badge.deleted');
 
         return $this->redirectToRoute('list_badge');
     }
@@ -527,7 +525,7 @@ class AdminController extends BaseController
         $season = $seasonService->getActiveSeason($server);
 
         if($season->getStatus() == Season::STATUS_ACTIVE) {
-            $this->addFlash('warning', 'You can\'t delete all players right now, let season finish.');
+            $this->addFlash('warning', 'admin.player.season_in_progress');
 
             return $this->redirectToRoute('list_player');
         }
@@ -572,7 +570,7 @@ class AdminController extends BaseController
             $em->flush();
         }
 
-        $this->addFlash('success', 'Players deleted successfully.');
+        $this->addFlash('success', 'admin.player.deleted');
 
         return $this->redirectToRoute('list_player');
     }
@@ -600,7 +598,7 @@ class AdminController extends BaseController
         $player = $playerRepository->find($id);
 
         if(!$player) {
-            $this->addFlash('warning', 'Player couldn\'t be found.');
+            $this->addFlash('warning', 'admin.player.not_found');
 
             return $this->redirectToRoute('list_player');
         }
@@ -615,7 +613,7 @@ class AdminController extends BaseController
         $em->remove($player);
         $em->flush();
 
-        $this->addFlash('success', 'Player deleted successfully.');
+        $this->addFlash('success', 'admin.player.one_player_deleted');
 
         return $this->redirectToRoute('list_player');
     }
@@ -667,7 +665,7 @@ class AdminController extends BaseController
         $server = $serverRepository->find($id);
 
         if (!$server instanceof Server) {
-            $this->addFlash('warning', 'Server not found!');
+            $this->addFlash('warning', 'admin.season.server.not_found');
 
             return $this->redirectToRoute('admin_season');
         }
@@ -675,25 +673,25 @@ class AdminController extends BaseController
         $season = $seasonService->getActiveSeason($server);
 
         if (!$season instanceof Season) {
-            $this->addFlash('warning', 'Server doesn\'t have season.');
+            $this->addFlash('warning', 'admin.season.server.no_season');
 
             return $this->redirectToRoute('admin_season');
         }
 
         if (count($server->getTeams()) <= 1) {
-            $this->addFlash('warning', 'To start season, you have to create two teams.');
+            $this->addFlash('warning', 'admin.season.no_teams');
 
             return $this->redirectToRoute('admin_season');
         }
 
         if (!$seasonService->teamsHaveCoach($server)) {
-            $this->addFlash('warning', 'There is teams that doesn\'t have coach.');
+            $this->addFlash('warning', 'admin.season.no_coach');
 
             return $this->redirectToRoute('admin_season');
         }
 
         $messageBus->dispatch(new StartSeason($server->getId(), $season->getId()));
-        $this->addFlash('success', 'You successfully started season.');
+        $this->addFlash('success', 'admin.season.started');
 
         return $this->redirectToRoute('admin_season');
     }
@@ -724,7 +722,7 @@ class AdminController extends BaseController
         $server = $serverRepository->find($id);
 
         if (!$server instanceof Server) {
-            $this->addFlash('warning', 'Server not found!');
+            $this->addFlash('warning', 'admin.season.server.not_found');
 
             return $this->redirectToRoute('admin_season');
         }
@@ -732,14 +730,14 @@ class AdminController extends BaseController
         $season = $seasonService->getActiveSeason($server);
 
         if (!$season instanceof Season) {
-            $this->addFlash('warning', 'Server doesn\'t have season.');
+            $this->addFlash('warning', 'admin.season.server.no_server');
 
             return $this->redirectToRoute('admin_season');
         }
 
         $messageBus->dispatch(new SimulateGames($season->getId(), $server->getId()));
 
-        $this->addFlash('success', 'Simulation started.');
+        $this->addFlash('success', 'admin.season.simulation_started');
 
         sleep(5);
 
@@ -772,7 +770,7 @@ class AdminController extends BaseController
         $server = $serverRepository->find($id);
 
         if (!$server instanceof Server) {
-            $this->addFlash('warning', 'Server not found!');
+            $this->addFlash('warning', 'admin.season.server.not_found');
 
             return $this->redirectToRoute('admin_season');
         }
@@ -780,14 +778,14 @@ class AdminController extends BaseController
         $season = $seasonService->getActiveSeason($server);
 
         if (!$season instanceof Season) {
-            $this->addFlash('warning', 'Server doesn\'t have season.');
+            $this->addFlash('warning', 'admin.season.server.no_server');
 
             return $this->redirectToRoute('admin_season');
         }
 
         $messageBus->dispatch(new SimulateOneGame($season->getId()));
 
-        $this->addFlash('success', 'One game simulated.');
+        $this->addFlash('success', 'admin.season.one_game_simulation_started');
 
         return $this->redirectToRoute('admin_season');
     }
@@ -818,7 +816,7 @@ class AdminController extends BaseController
         $server = $serverRepository->find($id);
 
         if (!$server instanceof Server) {
-            $this->addFlash('warning', 'Server not found!');
+            $this->addFlash('warning', 'admin.season.server.not_found');
 
             return $this->redirectToRoute('admin_season');
         }
@@ -826,14 +824,14 @@ class AdminController extends BaseController
         $season = $seasonService->getActiveSeason($server);
 
         if (!$season instanceof Season) {
-            $this->addFlash('warning', 'Server doesn\'t have season.');
+            $this->addFlash('warning', 'admin.season.server.no_server');
 
             return $this->redirectToRoute('admin_season');
         }
 
         $messageBus->dispatch(new SimulateTwoGames($season->getId()));
 
-        $this->addFlash('success', 'Two games simulated.');
+        $this->addFlash('success', 'admin.season.two_games_simulation_started');
 
         return $this->redirectToRoute('admin_season');
     }
@@ -859,7 +857,7 @@ class AdminController extends BaseController
             $em->persist($trainingCamp);
             $em->flush();
 
-            $this->addFlash('success', 'Training camp created.');
+            $this->addFlash('success', 'admin.training_camp.created');
 
             return $this->redirectToRoute('new_training_camp');
         }
@@ -923,7 +921,7 @@ class AdminController extends BaseController
         $trainingCamp = $trainingCampRepository->find($id);
 
         if(!$trainingCamp) {
-            $this->addFlash('warning', 'Training camp was not found.');
+            $this->addFlash('warning', 'admin.training_camp.not_found');
 
             return $this->redirectToRoute('list_training_camp');
         }
@@ -938,7 +936,7 @@ class AdminController extends BaseController
         $em->remove($trainingCamp);
         $em->flush();
 
-        $this->addFlash('success', 'Training camp was deleted.');
+        $this->addFlash('success', 'admin.training_camp.deleted');
 
         return $this->redirectToRoute('list_training_camp');
     }
@@ -997,7 +995,7 @@ class AdminController extends BaseController
         $season = $seasonService->getActiveSeason($server);
 
         if($season->getUserReward()) {
-            $this->addFlash('warning', 'Rewards for current season are already set.');
+            $this->addFlash('warning', 'admin.rewards.already_set');
 
             return $this->redirectToRoute('admin_dashboard');
         }
@@ -1013,7 +1011,7 @@ class AdminController extends BaseController
             $em->persist($userReward);
             $em->flush();
 
-            $this->addFlash('success', 'Rewards set successfully.');
+            $this->addFlash('success', 'admin.rewards.created');
 
             return $this->redirectToRoute('admin_dashboard');
         }
@@ -1048,29 +1046,23 @@ class AdminController extends BaseController
         $form->handleRequest($request);
 
         if($coachRepository->countFreeAgentCoaches() < 1 && $request->getMethod() === Request::METHOD_GET) {
-            $this->addFlash('warning', 'There is no coaches to be changed.');
+            $this->addFlash('warning', 'admin.coach.no_coach');
 
             return $this->redirectToRoute('admin_dashboard');
         }
 
         if($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            /**
-             * @var Team $team
-             */
             $team = $em->getRepository(Team::class)->find($form->getData()['team']);
-            /**
-             * @var Coach $coach
-             */
             $coach = $em->getRepository(Coach::class)->find($form->getData()['coach']);
 
             if($team->getCoach()) {
                 $oldCoach = $team->getCoach();
                 $oldCoach->setTeam(null);
 
-                $this->addFlash('success', 'Coach changed successfully.');
+                $this->addFlash('success', 'admin.coach.changed');
             } else {
-                $this->addFlash('success', 'Great, team now has coach.');
+                $this->addFlash('success', 'admin.coach.set');
             }
 
             $team->setCoach($coach);

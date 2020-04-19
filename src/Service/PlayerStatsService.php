@@ -3,10 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Player;
-use App\Entity\PlayerStats;
-use App\Entity\Season;
 use App\Repository\PlayerStatsRepository;
-use Doctrine\ORM\EntityManagerInterface;
 
 class PlayerStatsService
 {

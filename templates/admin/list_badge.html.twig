@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}List of all badges{% endblock %}
+{% block title %}{{ 'pages.titles.list_badge' | trans }}{% endblock %}
 
 {% block body %}
 
@@ -15,19 +15,19 @@
 
 
                 <div class="card bg-custom-dark">
-                    <div class="card-header">Badge list ({{ badges.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-header">{{ 'list_badge.header' | trans }} ({{ badges.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">{{ 'template.admin.dashboard' | trans }}</a></div>
                     <div class="card-body">
                         <div class="row mb-4 d-flex justify-content-center">
-                            <a href="{{ path('new_badge') }}" class="btn btn-sm btn-secondary ml-2">Create new badge</a>
+                            <a href="{{ path('new_badge') }}" class="btn btn-sm btn-secondary ml-2">{{ 'badge_list.button.new' | trans }}</a>
 
                         </div>
                         <div class="row">
                             <table class="table table-borderless text-center text-white">
                                 <thead class="text-white-50">
                                 <tr>
-                                    <td>Badge</td>
-                                    <td>Bonus for</td>
-                                    <td>Action</td>
+                                    <td>{{ 'list_badge.table.header.badge' | trans }} </td>
+                                    <td>{{ 'list_badge.table.header.bonus_for' | trans }} </td>
+                                    <td>{{ 'list_badge.table.header.actions' | trans }} </td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -35,7 +35,7 @@
                                     <tr>
                                         <td>{{ badge.name }}</td>
                                         <td>{{ badge.attribute.name }}</td>
-                                        <td><a href="{{ url('delete_badge', {'id': badge.id}) }}" class="btn btn-sm btn-danger">Remove</a></td>
+                                        <td><a href="{{ url('delete_badge', {'id': badge.id}) }}" class="btn btn-sm btn-danger">{{ 'badge_list.button.remove' | trans }}</a></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

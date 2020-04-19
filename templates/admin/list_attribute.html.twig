@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}List of all attributes{% endblock %}
+{% block title %}{{ 'pages.titles.list_attribute' | trans }}{% endblock %}
 
 {% block body %}
 
@@ -13,24 +13,24 @@
 
             <div class="col-md-8 mb-5">
                 <div class="card bg-custom-dark">
-                    <div class="card-header">Attribute list ({{ attributes.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-header">{{ 'list_attribute.header' | trans }} ({{ attributes.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">{{ 'template.admin.dashboard' | trans }}</a></div>
                     <div class="card-body">
                         <div class="row mb-4 d-flex justify-content-center">
-                            <a href="{{ path('new_attribute') }}" class="btn btn-sm btn-secondary ml-2">Create new attribute </a>
+                            <a href="{{ path('new_attribute') }}" class="btn btn-sm btn-secondary ml-2">{{ 'list_attribute.button.new' | trans }}</a>
                         </div>
                         <div class="row">
                             <table class="table table-borderless text-center text-white">
                                 <thead class="text-white-50">
                                 <tr>
-                                    <td>Attribute name</td>
-                                    <td>Action</td>
+                                    <td>{{ 'list_attribute.table.header.name' | trans }}</td>
+                                    <td>{{ 'list_attribute.table.header.actions' | trans }}</td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for attribute in attributes %}
                                     <tr>
                                         <td>{{ attribute.name }}</td>
-                                        <td><a href="{{ url('delete_attribute', {'id': attribute.id}) }}" class="btn btn-sm btn-danger">Remove</a></td>
+                                        <td><a href="{{ url('delete_attribute', {'id': attribute.id}) }}" class="btn btn-sm btn-danger">{{ 'button.remove' | trans }}</a></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

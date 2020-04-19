@@ -190,6 +190,14 @@ a.noHoverYellow:hover {
     color: #FFCC00;
 }
 
+.faded {
+    opacity: 0.3;
+}
+
+.light {
+    opacity: 1;
+}
+
 @media only screen and (max-width: 768px) {
     .team-logo{
         height: 150px;

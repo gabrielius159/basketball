@@ -1,52 +1,22 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Service;
 
 use App\Entity\Coach;
-use App\Entity\GameDay;
 use App\Entity\Player;
-use App\Entity\Position;
 use App\Entity\Server;
 use App\Entity\Team;
-use App\Entity\TeamStatus;
 use App\Repository\GameDayRepository;
 use App\Repository\TeamStatusRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * Class TeamService
- *
- * @package App\Service
- */
 class TeamService
 {
-    /**
-     * @var EntityManagerInterface
-     */
     private $entityManager;
-
-    /**
-     * @var SeasonService
-     */
     private $seasonService;
-
-    /**
-     * @var TeamStatusRepository
-     */
     private $teamStatusRepository;
-
-    /**
-     * @var PlayerService
-     */
     private $playerService;
-
-    /**
-     * @var GameDayRepository
-     */
     private $gameDayRepository;
-
     private $fakePlayerService;
 
     /**
