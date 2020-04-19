@@ -25,57 +25,18 @@ use App\Repository\TeamRepository;
 use App\Repository\TeamStatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
-use Faker\Generator;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-
-/**
- * Class SeasonService
- *
- * @package App\Service
- */
 class SeasonService
 {
-    /**
-     * @var SeasonRepository
-     */
     private $seasonRepository;
-
-    /**
-     * @var PlayerStatsRepository
-     */
     private $playerStatsRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
     private $entityManager;
-
-    /**
-     * @var GameDayRepository
-     */
     private $gameDayRepository;
-
-    /**
-     * @var Generator
-     */
     private $faker;
-
-    /**
-     * @var PlayerRepository
-     */
     private $playerRepository;
-
-    /**
-     * @var TeamStatusRepository
-     */
     private $teamStatusRepository;
-
-    /**
-     * @var EventDispatcherInterface
-     */
     private $eventDispatcher;
-
     private $teamRepository;
 
     /**
@@ -972,11 +933,11 @@ class SeasonService
     /**
      * @param Server $server
      *
-     * @return mixed
+     * @return array
      *
-     * @throws \Exception
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getTwoUpcomingGames(Server $server)
+    public function getTwoUpcomingGames(Server $server): array
     {
         $games = $this->gameDayRepository->getTwoUpcomingGames($this->getActiveSeason($server));
 

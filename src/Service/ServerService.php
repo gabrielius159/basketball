@@ -7,9 +7,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ServerService
 {
-    /**
-     * @var EntityManagerInterface
-     */
     private $entityManager;
 
     /**

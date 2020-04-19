@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Constant\LanguageConstants;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -40,6 +40,11 @@ class User implements UserInterface
      * @ORM\OneToOne(targetEntity="App\Entity\Player", mappedBy="user", cascade={"persist", "remove"})
      */
     private $player;
+
+    /**
+     * @ORM\Column(type="string", length=10, options={"default": "en"})
+     */
+    private $locale = LanguageConstants::DEFAULT_LOCALE;
 
     /**
      * User constructor.
@@ -191,6 +196,26 @@ class User implements UserInterface
         if ($newUser !== $player->getUser()) {
             $player->setUser($newUser);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return User
+     */
+    public function setLocale(string $locale): User
+    {
+        $this->locale = $locale;
 
         return $this;
     }

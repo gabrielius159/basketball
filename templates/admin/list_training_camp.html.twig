@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}List of all training camps{% endblock %}
+{% block title %}{{ 'pages.titles.list_training_camp' | trans }}{% endblock %}
 
 {% block body %}
 
@@ -15,21 +15,21 @@
 
 
                 <div class="card bg-custom-dark">
-                    <div class="card-header">Training camp list ({{ camps.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-header">{{ 'list_training_camp.header' | trans }} ({{ camps.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">{{ 'template.admin.dashboard' | trans }}</a></div>
                     <div class="card-body">
                         <div class="row mb-4 d-flex justify-content-center">
-                            <a href="{{ path('new_training_camp') }}" class="btn btn-sm btn-secondary ml-2">Create new training camp</a>
+                            <a href="{{ path('new_training_camp') }}" class="btn btn-sm btn-secondary ml-2">{{ 'list_training_camp.button.new' | trans }}</a>
                         </div>
                         <div class="row">
                             <table class="table table-borderless text-center text-white table-responsive">
                                 <thead class="text-white-50">
                                 <tr>
-                                    <td>Training camp</td>
-                                    <td>Improves</td>
-                                    <td>Duration</td>
-                                    <td>Price</td>
-                                    <td>Gives badge?</td>
-                                    <td>Actions</td>
+                                    <td>{{ 'list_training_camp.table.header.training_camp' | trans }}</td>
+                                    <td>{{ 'list_training_camp.table.header.improves' | trans }}</td>
+                                    <td>{{ 'list_training_camp.table.header.duration' | trans }}</td>
+                                    <td>{{ 'list_training_camp.table.header.price' | trans }}</td>
+                                    <td>{{ 'list_training_camp.table.header.gives_badge' | trans }}</td>
+                                    <td>{{ 'list_training_camp.table.header.actions' | trans }}</td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -39,8 +39,8 @@
                                         <td>{{ camp.attributeToImprove.name }} + {{ camp.skillPoints }}</td>
                                         <td>{{ camp.duration }}h</td>
                                         <td>${{ camp.price }}</td>
-                                        <td>{% if camp.badge %} <span class="badge badge-warning">{{ camp.badge.name }}</span> {% else %}No{% endif %}</td>
-                                        <td><a href="{{ url('delete_training_camp', {'id': camp.id}) }}" class="btn btn-sm btn-danger">Remove</a></td>
+                                        <td>{% if camp.badge %} <span class="badge badge-warning">{{ camp.badge.name }}</span> {% else %}{{ 'list_training_camp.table.data.gives_badge_no' | trans }}{% endif %}</td>
+                                        <td><a href="{{ url('delete_training_camp', {'id': camp.id}) }}" class="btn btn-sm btn-danger">{{ 'list_training_camp.button.remove' | trans }}</a></td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

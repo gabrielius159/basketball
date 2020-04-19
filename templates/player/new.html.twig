@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Create your player{% endblock %}
+{% block title %}{{ 'pages.titles.new' | trans }}{% endblock %}
 
 {% block body %}
 
@@ -11,7 +11,7 @@
 
         <div class="col-md-8 offset-md-2"><!-- Form -->
             <div class="card text-white bg-custom-dark mb-3" style="width: 100%;">
-                <div class="card-header pt-4 pb-4">Create your player</div>
+                <div class="card-header pt-4 pb-4">{{ 'new_player.header' | trans }}</div>
                 <div class="card-body">
                 {{ form_start(form) }}
 
@@ -19,10 +19,9 @@
 
                     {{ form_widget(form, {'attr': {'class': 'text-white-50'}}) }}
 
-                    <button type="submit" class="btn btn-md btn-warning">Create Player</button>
+                    <button type="submit" class="btn btn-md btn-warning">{{ 'new_player.button.create' | trans }}</button>
 
                     {{ form_end(form) }}
-                    <small class="form-text text-muted mt-2">* Required fields.</small>
                 </div>
             </div>
         </div><!-- Form -->

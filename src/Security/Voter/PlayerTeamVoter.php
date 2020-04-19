@@ -1,17 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Security\Voter;
 
-use App\Entity\Player;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-/**
- * Class PlayerTeamVoter
- *
- * @package App\Security\Voter
- */
 class PlayerTeamVoter extends Voter
 {
     const HAS_TEAM = 'HAS_TEAM';

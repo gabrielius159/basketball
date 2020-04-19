@@ -7,7 +7,6 @@ use App\Factory\Factory\PlayerAttributeFactory;
 use App\Repository\PlayerAttributeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\PlayerAttribute AS PlayerAttributeEntity;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PlayerAttributeService
 {

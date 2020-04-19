@@ -27,11 +27,13 @@ class PlayerAttributeController extends BaseController
     /**
      * @Route("/{playerId}", name="api_player_attribute", methods={"GET"})
      *
-     * @param Request $request
+     * @param Request                $request
      * @param PlayerAttributeService $playerAttributeService
-     * @param int $playerId
+     * @param int                    $playerId
      *
      * @return JsonResponse
+     *
+     * @throws \Exception
      */
     public function playerAttributesAction(
         Request $request,
@@ -64,12 +66,14 @@ class PlayerAttributeController extends BaseController
     /**
      * @Route("/improve/{attributeId}", name="api_player_attribute_improve", methods={"POST"})
      *
-     * @param Request $request
-     * @param int $attributeId
+     * @param Request                $request
+     * @param int                    $attributeId
      * @param PlayerAttributeService $playerAttributeService
-     * @param PlayerAttribute $playerAttributeUtil
+     * @param PlayerAttribute        $playerAttributeUtil
      *
      * @return JsonResponse
+     *
+     * @throws \Exception
      */
     public function playerAttributeImproveAction(
         Request $request,

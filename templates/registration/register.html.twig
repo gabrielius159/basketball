@@ -16,17 +16,27 @@
 
         </div>
 
-
+        <div class="row pb-3">
+            <div class="col-md-12">
+                <h3 class="text-center">Choose your language / <br>Pasirinkite kalbą</h3>
+            </div>
+            <div class="col-md-6 offset-md-3 d-flex flex-row justify-content-center flags">
+                <div class="en-flag">
+                    <img style="width: 100px; height: 70px; cursor: pointer;" src="{{ asset('images/flags/en.png') }}" alt="English locale flag">
+                </div>
+                <div class="lt-flag">
+                    <img style="width: 100px; height: 70px; cursor: pointer;" src="{{ asset('images/flags/lt.png') }}" alt="Lithuanian locale flag">
+                </div>
+            </div>
+        </div>
 
         <div class="row"><!-- Row -->
-
-
-
             <div class="col-md-6 offset-md-3"><!-- Form -->
                 <div class="card text-white bg-custom-dark mb-3" style="width: 100%;">
                     <div class="card-header pt-4 pb-4">Registration</div>
                     <div class="card-body">
                         {{ form_start(registrationForm) }}
+                            {{ form_widget(registrationForm.locale) }}
                             {{ form_row(registrationForm.email) }}
                             {{ form_row(registrationForm.plainPassword) }}
 
@@ -44,4 +54,30 @@
 
     </div><!-- Container -->
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(document).ready(function() {
+            $('.en-flag img').on('click', function (e) {
+                $(this).addClass('light');
+                $(this).removeClass('faded');
+                $('.lt-flag img').addClass('faded');
+                $('.lt-flag img').removeClass('light');
+                $('#registration_form_locale').val('en');
+            });
+
+            $('.en-flag img').trigger('click');
+
+            $('.lt-flag img').on('click', function (e) {
+                $(this).addClass('light');
+                $(this).removeClass('faded');
+                $('.en-flag img').addClass('faded');
+                $('.en-flag img').removeClass('light');
+                $('#registration_form_locale').val('lt');
+            });
+        });
+    </script>
 {% endblock %}

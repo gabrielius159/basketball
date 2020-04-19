@@ -54,19 +54,19 @@
 
         {% for message in app.flashes('success') %} <!-- Success message -->
             <div class="container-fluid text-center bg-warning {{ (app.session.flashbag.peek('warning')|length > 0 or app.session.flashbag.peek('draftPick')|length > 0) ? '' : 'mb-5' }}" id="flashMessageSuccess" style="min-height: 50px; color: white; padding-top: 13px; padding-bottom: 13px; font-weight: bold;">
-                <b>{{ message }}</b>
+                <b>{{ message | trans }}</b>
             </div>
         {% endfor %} <!-- Success message -->
 
         {% for message in app.flashes('warning') %} <!-- Error message -->
             <div class="container-fluid text-center bg-danger {{ app.session.flashbag.peek('draftPick')|length > 0 ? '' : 'mb-5' }}" id="flashMessageWarning" style="min-height: 50px; color: white; padding-top: 13px; padding-bottom: 13px; font-weight: bold;">
-                <b>{{ message }}</b>
+                <b>{{ message | trans }}</b>
             </div>
         {% endfor %} <!-- Error message -->
 
         {% if app.session.flashbag.peek('draftPick')|length > 0 %} <!-- Draft message -->
             <div class="container-fluid text-center bg-success mb-5" id="flashMessageDraftPick" style="min-height: 50px; color: white; padding-top: 13px; padding-bottom: 13px; font-weight: bold;">
-                <strong>Congratulations, you have been picked by <b>{{ app.flashes('teamName')|first }}</b> with the <b>{{ app.flashes('draftPick')|first }}</b> pick!</strong>
+                <strong>{{ 'player.drafted' | trans({'teamName': app.flashes('teamName')[0], 'pick': app.flashes('draftPick')[0]}) }}</strong>
             </div>
         {% endif %} <!-- Draft message -->
 
@@ -83,7 +83,7 @@
                 <div class="row mt-5">
                     <div class="col text-center">
 
-                        <small class="text-muted text-center text-center">&copy; Created by Gabrielius Salichovas, PI16B</small>
+                        <small class="text-muted text-center text-center">{{ 'footer.text' | trans }}</small>
                     </div>
 
                 </div>

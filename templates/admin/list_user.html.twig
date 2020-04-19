@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}List of all players{% endblock %}
+{% block title %}{{ 'pages.titles.list_user' | trans }}{% endblock %}
 
 {% block body %}
 
@@ -15,7 +15,7 @@
 
 
                 <div class="card bg-custom-dark">
-                    <div class="card-header">User list ({{ users.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-header">{{ 'template.list_user.header' | trans }} ({{ users.getTotalItemCount }}) <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">{{ 'template.admin.dashboard' | trans }}</a></div>
                     <div class="card-body">
                         <div class="row mb-4 d-flex justify-content-center">
 
@@ -24,9 +24,9 @@
                             <div class="col-md-6 offset-md-3">
                                 <form>
                                     <div class="form-group d-flex flex-row">
-                                        <input type="text" name="search" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+                                        <input type="text" name="search" class="form-control" id="exampleFormControlInput1" placeholder="{{ 'form.buttons.list_user.search.placeholder' | trans }}">
 
-                                        <button class="btn btn-md btn-warning" type="submit">Search</button>
+                                        <button class="btn btn-md btn-warning" type="submit">{{ 'form.buttons.list_user.search.text' | trans }}</button>
                                     </div>
                                 </form>
                             </div>
@@ -36,22 +36,22 @@
                             <table class="table table-borderless text-center text-white">
                                 <thead class="text-white-50">
                                 <tr>
-                                    <td>ID</td>
-                                    <td>Link to player</td>
-                                    <td>Email</td>
-                                    <td>Impersonate</td>
+                                    <td>{{ 'list_user.table.header.id' | trans }}</td>
+                                    <td>{{ 'list_user.table.header.link_to_player' | trans }}</td>
+                                    <td>{{ 'list_user.table.header.email' | trans }}</td>
+                                    <td>{{ 'list_user.table.header.impersonate' | trans }}</td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for user in users %}
                                     <tr>
                                         <td>{{ user.id }}</td>
-                                        <td>{% if user.player %} <a href="{{ path('player_index', {'id': user.player.id}) }}" class="btn btn-sm btn-warning">Player</a> {% else %}No player{% endif %}</td>
+                                        <td>{% if user.player %} <a href="{{ path('player_index', {'id': user.player.id}) }}" class="btn btn-sm btn-warning">{{ 'list_user.link.text.player' | trans }}</a> {% else %}{{ 'list_user.link.text.no_player' | trans }}{% endif %}</td>
                                         <td>{{ user.email }}</td>
                                         {% if app.user == user %}
                                             <td>-</td>
                                         {% else %}
-                                            <td><a href="{{ path('home', {'_switch_user': user.email}) }}" class="btn btn-sm btn-outline-secondary">Impersonate</a></td>
+                                            <td><a href="{{ path('home', {'_switch_user': user.email}) }}" class="btn btn-sm btn-outline-secondary">{{ 'list_user.table.header.impersonate' | trans }}</a></td>
                                         {% endif %}
 
                                     </tr>

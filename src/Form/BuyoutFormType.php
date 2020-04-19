@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Form;
 
@@ -7,11 +7,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Class BuyoutFormType
- *
- * @package App\Form
- */
 class BuyoutFormType extends AbstractType
 {
     /**
@@ -24,7 +19,7 @@ class BuyoutFormType extends AbstractType
             ->add('Leave this team', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn-md btn-warning'
-                ]
+                ],
             ])
         ;
     }
@@ -34,8 +29,6 @@ class BuyoutFormType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-
-        ]);
+        $resolver->setDefaults([]);
     }
 }

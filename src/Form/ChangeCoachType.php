@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Form;
 
@@ -12,21 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Class ChangeCoachType
- *
- * @package App\Form
- */
 class ChangeCoachType extends AbstractType
 {
-    /**
-     * @var ServerService
-     */
     private $serverService;
-
-    /**
-     * @var EntityManagerInterface
-     */
     private $entityManager;
 
     /**
@@ -57,7 +45,7 @@ class ChangeCoachType extends AbstractType
 
         $builder
             ->add('team', ChoiceType::class, [
-                'label' => 'Select team:',
+                'label' => 'form.change_coach_type.label.team',
                 'choices' => $teams,
                 'choice_label' => function(Team $team) {
                     if(!$team->getCoach()) {
@@ -67,14 +55,16 @@ class ChangeCoachType extends AbstractType
                     return $team->getCity() . ' ' . $team->getName() . ' (' . $team->getCoach()->getFirstname() . ' ' .
                         $team->getCoach()->getLastname() . ', type: ' .
                         $team->getCoach()->getFirstGameType()->getName() . ')';
-                }
+                },
+                'translation_domain' => 'messages',
             ])
             ->add('coach', ChoiceType::class, [
-                'label' => 'Select new coach:',
+                'label' => 'form.change_coach_type.label.coach',
                 'choices' => $coaches,
                 'choice_label' => function(Coach $coach) {
                     return $coach->getFirstname() . ' ' . $coach->getLastname() . ' (Type: ' . $coach->getFirstGameType()->getName() . ')';
-                }
+                },
+                'translation_domain' => 'messages',
             ])
         ;
     }
@@ -84,8 +74,6 @@ class ChangeCoachType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            // Configure your form options here
-        ]);
+        $resolver->setDefaults([]);
     }
 }

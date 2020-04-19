@@ -1,0 +1,323 @@
+project:
+    error:
+        page_not_found: 'Page not found'
+admin:
+    attribute:
+        created: 'Attribute created successfully.'
+        not_found: "Attribute couldn't be found."
+        deleted: 'Attribute deleted successfully.'
+    team:
+        season_in_progress: "You can't create team when season is in progress."
+        created: 'Team created successfully.'
+        not_found: "Team couldn't be found."
+        deleted: 'Team deleted successfully!'
+    coach:
+        created: 'Coach created successfully.'
+        not_found: "Coach couldn't be found."
+        replace_coach: 'First set new coach for the team.'
+        deleted: 'Coach deleted successfully.'
+        no_coach: 'There is no coaches to be changed.'
+        changed: 'Coach changed successfully.'
+        set: 'Great, team now has coach.'
+    badge:
+        created: 'Badge created successfully.'
+        not_found: "Badge couldn't be found."
+        deleted: 'Badge deleted successfully.'
+    player:
+        season_in_progress: "You can't delete all players right now, let season finish."
+        deleted: 'Players deleted successfully.'
+        not_found: "Player couldn't be found."
+        one_player_deleted: 'Player deleted successfully.'
+    season:
+        server:
+            not_found: 'Server not found!'
+            no_season: "Server doesn't have season."
+        no_teams: 'To start season, you have to create two teams.'
+        no_coach: "There is teams that doesn't have coach."
+        started: 'You successfully started season.'
+        simulation_started: 'Simulation started.'
+        one_game_simulation_started: 'One game simulated.'
+        two_games_simulation_started: 'Two games simulated.'
+    training_camp:
+        created: 'Training camp created.'
+        not_found: 'Training camp was not found.'
+        deleted: 'Training camp was deleted.'
+    rewards:
+        already_set: 'Rewards for current season are already set.'
+        created: 'Rewards set successfully.'
+player:
+    has_player: 'You already have player!'
+    created: 'Player created successfully.'
+    no_teams: 'Sorry to say, but no team was interested in you, you are a free agent.'
+    drafted: 'Congratulations, you have been picked by <b>%teamName%</b> with the <b>%%pick</b> pick!'
+    no_player: 'You need to create your player first to see other player profiles.'
+    not_found: 'Player not found.'
+    no_badge: 'No badges'
+user:
+    team_left: 'You left the team.'
+    not_interested: 'Sorry, team is not interested in any addition.'
+    cannot_join: 'You cannot join any team right now, wait till the season ends.'
+    training_camp:
+        in_camp: 'You are already in training camp.'
+        no_player: 'You need to create your player first to see training camps.'
+    no_money: "You don't have enough money."
+game:
+    not_found: 'Game was not found.'
+    not_finished_or_started: 'Game did not finished or started.'
+registration:
+    success: 'Registration successful, welcome aboard!'
+footer:
+    text: '© Created by Gabrielius Salichovas, PI16B'
+form:
+    attribute_type:
+        label:
+            name: 'Attribute name:'
+            default_value: 'Default attribute value:'
+            game_type: 'Skill category:'
+        placeholder:
+            name: 'Example: "Speed"'
+        help:
+            default_value: 'This value will be applied for all players [Range: 0 - 100].'
+    badge_type:
+        label:
+            name: 'Badge name:'
+            attribute: 'Skill:'
+        placeholder:
+            name: 'Example: "Flashy passer"'
+    change_coach_type:
+        label:
+            team: 'Select team:'
+            coach: 'Select new coach:'
+    coach_type:
+        label:
+            firstname: 'Firstname:'
+            lastname: 'Lastname:'
+            team: 'Select team for Head Coach:'
+            game_type: 'Coach specialization:'
+        placeholder:
+            firstname: 'Example: "Coach"'
+            lastname: 'Example: "Carter"'
+            team: 'No Team'
+    player_type:
+        label:
+            weight: 'Weight (kg):'
+            height: 'Height (cm):'
+            year: 'Year born:'
+            position: 'Pick your position:'
+            country: 'Country:'
+            server: 'Pick a server:'
+            first_type: 'Strongest skill:'
+            second_type: 'Second strongest skill:'
+        placeholder:
+            country: 'Select country'
+        help:
+            first_type: 'Upgrading selected skill will cost less.'
+            second_type: 'Upgrading selected skill will cost less.'
+    helper:
+        required_fields: '* Required fields.'
+    buttons:
+        create: 'Create'
+        list_user:
+            search:
+                placeholder: 'name@example.com'
+                text: 'Search'
+template:
+    admin:
+        dashboard: 'Back to dashboard'
+    player:
+        buyout:
+            title: 'Buyout from <span class="yellowColor font-weight-bold">%teamName%</span>'
+            text: 'Are you sure you want to leave this team and become free agent?'
+    attribute:
+        header: 'Create new attribute'
+    badge:
+        header: 'Create new badge'
+    coach:
+        header: 'Create new coach'
+    team:
+        header: 'Create new team'
+    training_camp:
+        header: 'Create new training camp'
+    reward:
+        header: 'Create new reward'
+    season_management:
+        header: 'Manage season'
+    list_user:
+        header: 'User list'
+pages:
+    titles:
+        new_attribute: 'New attribute'
+        new_badge: 'New badge'
+        buyout: 'Buyout from team'
+        new_coach: 'New Coach'
+        new_team: 'New team'
+        new_training_camp: 'New training camp'
+        new_reward: 'New reward'
+        season_management: 'Season management'
+        list_user: 'List of all players'
+        list_training_camp: 'List of all training camps'
+        list_team: 'List of all teams'
+        list_player: 'List of all players'
+        list_coach: 'List of all coaches'
+        list_badge: 'List of all badges'
+        list_attribute: 'List of all attributes'
+        dashboard: 'Admin board'
+        change_coach: 'Change coach'
+        new: 'Create your player'
+season_management:
+    table:
+        header:
+            server_name: 'Server name'
+            season_number: 'Season number'
+            season_status: 'Season status'
+            actions: 'Actions'
+    actions:
+        start_season: 'Start season'
+        simulate_season: 'Simulate season'
+        simulate_one_game: 'Simulate one game'
+        simulate_two_games: 'Simulate two games'
+list_user:
+    table:
+        header:
+            id: 'ID'
+            link_to_player: 'Link to player'
+            email: 'Email'
+            impersonate: 'Impersonate'
+    link:
+        text:
+            player: 'Player'
+            no_player: 'No player'
+list_training_camp:
+    header: 'Training camp list'
+    button:
+        new: 'Create new training camp'
+        remove: 'Remove'
+    table:
+        header:
+            training_camp: 'Training camp'
+            improves: 'Improves'
+            duration: 'Duration'
+            price: 'Price'
+            gives_badge: 'Gives badge?'
+            actions: 'Actions'
+        data:
+            gives_badge_no: 'No'
+list_team:
+    header: 'Team list'
+    button:
+        new: 'Create new team'
+        remove: 'Remove'
+    table:
+        header:
+            team: 'Team'
+            salary_cap: 'Salary cap'
+            actions: 'Actions'
+list_player:
+    header: 'Player list'
+    button:
+        remove_all: 'Delete all players'
+        search: 'Search'
+        remove: 'Remove'
+    placeholder:
+        search: 'Dwight Howard'
+    table:
+        header:
+            id: 'ID'
+            image: 'Image'
+            player: 'Player'
+            has_team: 'Has team?'
+            real_player: 'Real player?'
+            actions: 'Actions'
+    data:
+        yes: 'Yes'
+        no: 'No'
+list_coach:
+    header: 'Coach list'
+    button:
+        new: 'Create new Coach'
+        remove: 'Remove'
+    table:
+        header:
+            coach: 'Coach'
+            has_team: 'Has team?'
+            actions: 'Actions'
+badge_list:
+    header: 'Badge list'
+    button:
+        new: 'Create new badge'
+        remove: 'Remove'
+    table:
+        header:
+            badge: 'Badge'
+            bonus_for: 'Bonus for'
+            actions: 'Actions'
+list_attribute:
+    header: 'Attribute list'
+    button:
+        new: 'Create new attribute'
+    table:
+        header:
+            name: 'Attribute name'
+            actions: 'Actions'
+button:
+    remove: 'Remove'
+dashboard:
+    header: 'Admin board'
+    text: 'Welcome to admin board. This is the place where you can manage the project.'
+change_coach:
+    header: 'Change coach'
+    button:
+        new: 'Create new Coach'
+        change: 'Change'
+admin_navigation:
+    header: 'Menu'
+    season: 'Manage servers'
+    attribute: 'Attribute list'
+    badge: 'Badge list'
+    coach: 'Coach list'
+    player: 'Player list'
+    team: 'Team list'
+    camp: 'Training camp list'
+    user: 'User list'
+    rewards: 'Set up rewards'
+    change_coach: 'Change / Set coach'
+homepage:
+    title: "Basketball Player's Career Simulator"
+    button:
+        login: 'Login'
+        register: 'Register'
+        logout: 'Logout'
+    showcase:
+        start: 'Start your '
+        end: 'journey'
+        text: 'Compete, win and get rewarded.'
+navigation:
+    home: 'Home'
+    free_agents: 'Free Agents'
+    camp: 'Training camps'
+    new_player: 'Create my Player'
+    admin: 'Admin board'
+    check_my_player: 'Check my Player'
+player_information:
+    status: 'Player status'
+    statuses:
+        training: 'Training'
+        rest: 'Resting'
+    born: 'Born'
+    position: 'Position'
+    country: 'Country'
+    skills: 'Strongest skills'
+    team: 'Team'
+    none: 'None'
+    contract_ends: 'Contract ends after'
+    seasons: 'season (-s)'
+    jersey: 'Jersey number'
+    height: 'Height, Weight'
+    rookie: 'Rookie of the year in %season% season.'
+    averages: 'Averages in each season'
+    first_season: "This is player's first season."
+new_player:
+    header: 'Create your player'
+    button:
+        create: 'Create Player'
+

@@ -6,7 +6,7 @@
 
 
         <div class="card bg-custom-dark">
-            <div class="card-header pb-4 pt-4">Averages in each season</div>
+            <div class="card-header pb-4 pt-4">{{ 'player_information.averages' | trans }}</div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
@@ -62,7 +62,7 @@
                             </table>
                         {% else %}
                             <p>
-                            This is player's first season.
+                            {{ 'player_information.first_season' | trans }}
                             </p>
                         {% endif %}
                     </div>

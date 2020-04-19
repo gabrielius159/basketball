@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Season management{% endblock %}
+{% block title %}{{ 'pages.title.season_management' | trans }}{% endblock %}
 
 {% block body %}
 
@@ -15,20 +15,20 @@
 
 
                 <div class="card bg-custom-dark">
-                    <div class="card-header">Manage season <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">Back to dashboard</a></div>
+                    <div class="card-header">{{ 'template.season_management.header' | trans }} <a href="{{ path('admin_dashboard') }}" style="font-size: x-small !important;" class="btn btn-sm btn-outline-secondary float-right">{{ 'template.admin.dashboard' | trans }}</a></div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col text-center">
-                                Server name
+                                {{ 'season_management.table.header.server_name' | trans }}
                             </div>
                             <div class="col text-center">
-                                Season number
+                                {{ 'season_management.table.header.season_number' | trans }}
                             </div>
                             <div class="col text-center">
-                                Season status
+                                {{ 'season_management.table.header.season_status' | trans }}
                             </div>
                             <div class="col text-center">
-                                Actions
+                                {{ 'season_management.table.header.actions' | trans }}
                             </div>
                         </div>
                         <hr>
@@ -45,13 +45,13 @@
                                 </div>
                                 <div class="col text-center">
                                     {% if server.seasonStatus == constant('App\\Entity\\Season::STATUS_PREPARING') %}
-                                        <a href="{{ path('admin_start_season', { 'id': server.id }) }}" class="btn btn-sm btn-danger">Start season</a>
+                                        <a href="{{ path('admin_start_season', { 'id': server.id }) }}" class="btn btn-sm btn-danger">{{ 'season_management.actions.start_season' | trans }}</a>
                                     {% endif %}
                                     {% if server.seasonStatus == constant('App\\Entity\\Season::STATUS_ACTIVE') %}
                                         <div class="btn-group-vertical btn-group-sm" role="group" aria-label="Basic example">
-                                            <a class="btn btn-warning" href="{{ path('admin_simulate_season', { 'id': server.id }) }}">Simulate season</a>
-                                            <a class="btn btn-secondary" href="{{ path('admin_simulate_one_game', { 'id': server.id }) }}">Simulate one game</a>
-                                            <a class="btn btn-secondary" href="{{ path('admin_simulate_two_games', { 'id': server.id }) }}">Simulate two game</a>
+                                            <a class="btn btn-warning" href="{{ path('admin_simulate_season', { 'id': server.id }) }}">{{ 'season_management.actions.simulate_season' | trans }}</a>
+                                            <a class="btn btn-secondary" href="{{ path('admin_simulate_one_game', { 'id': server.id }) }}">{{ 'season_management.actions.simulate_one_game' | trans }}</a>
+                                            <a class="btn btn-secondary" href="{{ path('admin_simulate_two_games', { 'id': server.id }) }}">{{ 'season_management.actions.simulate_two_games' | trans }}</a>
                                         </div>
                                     {% endif %}
                                 </div>
